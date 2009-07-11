@@ -17,7 +17,10 @@
 package org.codehaus.groovy.maven.gossip.config;
 
 import org.codehaus.groovy.maven.gossip.InternalLogger;
-import org.codehaus.groovy.maven.gossip.model.*;
+import org.codehaus.groovy.maven.gossip.model.Configuration;
+import org.codehaus.groovy.maven.gossip.model.EffectiveProfile;
+import org.codehaus.groovy.maven.gossip.model.Profile;
+import org.codehaus.groovy.maven.gossip.model.Source;
 import org.codehaus.groovy.maven.gossip.model.filter.ConsoleWriter;
 import org.codehaus.groovy.maven.gossip.model.source.URLSource;
 import org.codehaus.groovy.maven.gossip.model.trigger.AlwaysTrigger;

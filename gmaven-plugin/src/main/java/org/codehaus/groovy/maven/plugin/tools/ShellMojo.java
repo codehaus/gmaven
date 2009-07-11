@@ -21,8 +21,6 @@ import org.codehaus.groovy.maven.feature.Component;
 import org.codehaus.groovy.maven.feature.Configuration;
 import org.codehaus.groovy.maven.plugin.ComponentMojoSupport;
 import org.codehaus.groovy.maven.runtime.Shell;
-import org.codehaus.groovy.maven.runtime.loader.realm.RealmManager;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 import java.net.URLClassLoader;
 import java.util.List;
@@ -105,13 +103,6 @@ public class ShellMojo
      */
     private String args;
 
-    /**
-     * @component
-     *
-     * @noinspection UnusedDeclaration
-     */
-    private RealmManager realmManager;
-
     public ShellMojo() {
         super(Shell.KEY);
     }
@@ -140,10 +131,11 @@ public class ShellMojo
 
         Shell shell = (Shell) component;
 
-        ClassRealm realm = realmManager.createComponentRealm(provider(), createClassPath());
+        // Use the providers class-loader as a parent to resolve the Groovy runtime correctly
+        ClassLoader parent = provider().getClass().getClassLoader();
 
-        shell.execute(realm);
+        ClassLoader cl = new URLClassLoader(createClassPath(), parent);
 
-        realmManager.releaseComponentRealm(realm);
+        shell.execute(cl);
     }
 }

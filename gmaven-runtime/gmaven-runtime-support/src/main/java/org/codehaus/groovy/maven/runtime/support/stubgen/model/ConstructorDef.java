@@ -20,7 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Representation of a constructor definition.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -28,28 +28,22 @@ import java.util.Set;
 public class ConstructorDef
     extends MethodDef
 {
-    public static final String SUPER = "super";
-
-    public static final String THIS = "this";
-    
-    private final boolean magic;
+    private boolean magic;
 
     private String superType;
 
-    private final Set superParameters = new LinkedHashSet();
+    private Set superParameters = new LinkedHashSet();
 
     public ConstructorDef() {
-        this(false);
-    }
-
-    public ConstructorDef(final boolean magic) {
         super(Type.CTOR);
-
-        this.magic = magic;
     }
 
     public boolean isMagic() {
         return magic;
+    }
+
+    public void setMagic(final boolean magic) {
+        this.magic = magic;
     }
 
     public TypeDef getReturns() {
@@ -72,8 +66,8 @@ public class ConstructorDef
         return superType;
     }
 
-    public void setSuperType(final String type) {
-        this.superType = type;
+    public void setSuperType(final String superType) {
+        this.superType = superType;
     }
 
     public Set getSuperParameters() {

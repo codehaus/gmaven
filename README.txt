@@ -34,11 +34,6 @@ NOTE: Looks like something is whacky somewhere, and you will *need* to
 Release Muck
 ============
 
-NOTE: This does not really work ATM, not sure why... but release:prepare barfs
-      while tagging, so have to finish up the rest of the details by hand.
-      Hopefully for the next release I'll get this sorted out... or write my
-      own damn plugin to deal with this crap.
-
 First sanity check:
 
     mvn -Drelease release:prepare -DdryRun | tee release-prepare-dry.log

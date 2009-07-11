@@ -37,8 +37,10 @@ import java.util.Properties;
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class GroovyMavenProjectAdapter
-    extends MavenProjectDelegateAdapter
+    extends MavenProject
 {
+    private final MavenProject original;
+
     private final MavenSession session;
 
     private final Map properties;
@@ -50,6 +52,11 @@ public class GroovyMavenProjectAdapter
     public GroovyMavenProjectAdapter(final MavenProject project, final MavenSession session, final Map properties, final Map defaults) {
         super(project);
 
+        this.original = project;
+
+        // Copy constructor disowns its parent, so re-establish again here
+        setParent(project.getParent());
+        
         this.session = session;
         this.properties = properties;
         this.defaults = defaults;
@@ -159,7 +166,7 @@ public class GroovyMavenProjectAdapter
             log.trace("Putting value: {} = {}", key, value);
 
             // Have to set in the original to preserve between executions
-            getDelegate().getProperties().put(key, value);
+            original.getProperties().put(key, value);
 
             // But need to update ourself so resolution in the same execution works too
             return super.put(key, value);

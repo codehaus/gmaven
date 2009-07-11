@@ -17,7 +17,7 @@
 package org.codehaus.groovy.maven.feature;
 
 /**
- * Provides provider selection based on a selection expression.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

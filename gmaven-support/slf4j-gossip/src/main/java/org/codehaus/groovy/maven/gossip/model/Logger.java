@@ -44,14 +44,6 @@ public class Logger
         setName(name);
     }
 
-    public Logger(final String name, final String level) {
-        assert name != null;
-        assert level != null;
-
-        setName(name);
-        setLevel(level);
-    }
-
     public String toString() {
         return "Logger{" +
                 "name='" + name + '\'' +

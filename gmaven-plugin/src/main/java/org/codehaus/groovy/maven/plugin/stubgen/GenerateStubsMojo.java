@@ -68,6 +68,6 @@ public class GenerateStubsMojo
     }
 
     protected void forceCompile(final File file) {
-        compileState.addForcedCompilationSource(project, file);
+        compileState.addForcedCompilationSource(file);
     }
 }

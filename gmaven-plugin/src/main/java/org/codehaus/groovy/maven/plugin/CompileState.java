@@ -17,100 +17,47 @@
 package org.codehaus.groovy.maven.plugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
-
-import org.apache.maven.project.MavenProject;
 
 /**
  * Support for communication between stub generation and compilation.
  *
- * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @version $Id$
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class CompileState
 {
-    private Map forceCompile = new HashMap();
+    private Set forceCompile = new HashSet();
 
-    private Map forceCompileTest = new HashMap();
+    private Set forceCompileTest = new HashSet();
 
-    public synchronized void addForcedCompilationSource(final MavenProject project, final File file) {
-        String projectKey = projectKey(project);
-
-        if (!forceCompile.containsKey(projectKey)) {
-            forceCompile.put(projectKey, new TreeSet());
-        }
-
-        ((Set) forceCompile.get(projectKey)).add(file);
+    public void addForcedCompilationSource(final File file) {
+        forceCompile.add(file);
     }
 
-    public synchronized Set getForcedCompilationSources(final MavenProject project) {
-        String projectKey = projectKey(project);
+    public Set getForcedCompilationSources(final boolean clear) {
+        Set set = Collections.unmodifiableSet(new HashSet(forceCompile));
 
-        if (forceCompile.containsKey(projectKey)) {
-            Set files = new TreeSet();
-
-            for (Iterator i = ((Set) forceCompile.get(projectKey)).iterator(); i.hasNext();) {
-                File file = (File) i.next();
-
-                if (file.isFile()) {
-                    files.add(file);
-                }
-            }
-
-            return Collections.unmodifiableSet(files);
+        if (clear) {
+            forceCompile.clear();
         }
-        else {
-            return Collections.unmodifiableSet(new TreeSet());
-        }
+
+        return set;
     }
 
-    public synchronized void addForcedCompilationTestSource(final MavenProject project, final File file) {
-        String projectKey = projectKey(project);
-
-        if (!forceCompileTest.containsKey(projectKey)) {
-            forceCompileTest.put(projectKey, new TreeSet());
-        }
-
-        ((Set) forceCompileTest.get(projectKey)).add(file);
+    public void addForcedCompilationTestSource(final File file) {
+        forceCompileTest.add(file);
     }
 
-    public synchronized Set getForcedCompilationTestSources(final MavenProject project) {
-        String projectKey = projectKey(project);
+    public Set getForcedCompilationTestSources(final boolean clear) {
+        Set set = Collections.unmodifiableSet(new HashSet(forceCompileTest));
 
-        if (forceCompileTest.containsKey(projectKey)) {
-            Set files = new TreeSet();
-            for (Iterator i = ((Set) forceCompileTest.get(projectKey)).iterator(); i.hasNext();) {
-                File file = (File) i.next();
-                if (file.isFile()) {
-                    files.add(file);
-                }
-            }
-
-            return Collections.unmodifiableSet(files);
-        }
-        else {
-            return Collections.unmodifiableSet(new TreeSet());
-        }
-    }
-
-    private String projectKey(final MavenProject project) {
-        assert project != null;
-
-        if (project.getBasedir() == null || !project.getBasedir().isDirectory()) {
-            throw new IllegalStateException("Project " + project.getId() + " does not define a base directory: " + project.getBasedir());
+        if (clear) {
+            forceCompileTest.clear();
         }
 
-        try {
-            return project.getBasedir().getCanonicalPath();
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return set;
     }
 }

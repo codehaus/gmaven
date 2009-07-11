@@ -20,8 +20,6 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.codehaus.groovy.maven.feature.Component;
 import org.codehaus.groovy.maven.plugin.ComponentMojoSupport;
 import org.codehaus.groovy.maven.runtime.Console;
-import org.codehaus.groovy.maven.runtime.loader.realm.RealmManager;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 import java.net.URLClassLoader;
 import java.util.List;
@@ -40,13 +38,6 @@ import java.util.List;
 public class ConsoleMojo
     extends ComponentMojoSupport
 {
-    /**
-     * @component
-     *
-     * @noinspection UnusedDeclaration
-     */
-    private RealmManager realmManager;
-
     public ConsoleMojo() {
         super(Console.KEY);
     }
@@ -60,10 +51,11 @@ public class ConsoleMojo
 
         Console console = (Console) component;
 
-        ClassRealm realm = realmManager.createComponentRealm(provider(), createClassPath());
+        // Use the providers class-loader as a parent to resolve the Groovy runtime correctly
+        ClassLoader parent = provider().getClass().getClassLoader();
 
-        console.execute(realm);
+        ClassLoader cl = new URLClassLoader(createClassPath(), parent);
 
-        realmManager.releaseComponentRealm(realm);
+        console.execute(cl);
     }
 }

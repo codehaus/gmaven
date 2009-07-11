@@ -79,7 +79,7 @@ public class TestCompileMojo
     }
 
     protected Set getForcedCompileSources() {
-        return compileState.getForcedCompilationTestSources(project);
+        return compileState.getForcedCompilationTestSources(true);
     }
 
     protected void doExecute() throws Exception {

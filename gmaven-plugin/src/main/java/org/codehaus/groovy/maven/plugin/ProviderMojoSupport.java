@@ -22,12 +22,17 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.commons.lang.SystemUtils;
 import org.codehaus.groovy.maven.feature.Provider;
 import org.codehaus.groovy.maven.feature.ProviderException;
+import org.codehaus.groovy.maven.feature.ProviderLoader;
 import org.codehaus.groovy.maven.feature.ProviderManager;
 import org.codehaus.groovy.maven.runtime.loader.artifact.ArtifactHandler;
 import org.codehaus.groovy.maven.runtime.loader.artifact.ArtifactProviderLoader;
+import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -40,6 +45,7 @@ import java.util.Map;
  */
 public abstract class ProviderMojoSupport
     extends MojoSupport
+    implements Contextualizable
 {
     /**
      * @component
@@ -53,32 +59,28 @@ public abstract class ProviderMojoSupport
     /**
      * A comma-seperated list of provider keys, in order of preference of selection.
      *
-     * If the invoking JVM is at least Java 1.5, then the Groovy 1.6 runtime will be used, else
-     * the Groovy 1.5 runtime is used.
-     *
-     * @parameter expression="${gmaven.runtime}"
+     * @parameter expression="${groovy.runtime.provider}" default-value="default"
      *
      * @noinspection UnusedDeclaration
      */
-    private String providerSelection = detectCompatibleProvider();
+    private String providerSelection;
 
-    /**
-     * @component role="org.codehaus.groovy.maven.feature.ProviderLoader" role-hint="artifact"
-     * @required
-     * @readonly
-     * 
-     * @noinspection UnusedDeclaration
-     */
-    private ArtifactProviderLoader artifactProviderLoader;
+    private PlexusContainer container;
+
+    public void contextualize(final Context context) throws ContextException {
+        assert context != null;
+
+        container = (PlexusContainer) context.get(PlexusConstants.PLEXUS_KEY);
+    }
 
     private ArtifactHandler artifactHandler;
 
     private void configureArtifactProviderLoader() {
         if (artifactHandler == null) {
             try {
-                assert artifactProviderLoader != null;
-                artifactProviderLoader.setHandler(new ArtifactHandlerImpl());
-                artifactHandler = artifactProviderLoader.getHandler();
+                ArtifactProviderLoader loader = (ArtifactProviderLoader) container.lookup(ProviderLoader.class.getName(), "artifact");
+                loader.setHandler(new ArtifactHandlerImpl());
+                artifactHandler = loader.getHandler();
 
                 log.debug("Artifact loader configured with handler: {}", artifactHandler);
             }
@@ -92,21 +94,6 @@ public abstract class ProviderMojoSupport
         configureArtifactProviderLoader();
 
         return providerManager;
-    }
-
-    protected String detectCompatibleProvider() {
-        String provider;
-
-        if (SystemUtils.isJavaVersionAtLeast(1.5f)) {
-            provider = "1.6";
-        }
-        else {
-            provider = "1.5";
-        }
-
-        log.debug("Detected compatible provider: {}", provider);
-        
-        return provider;
     }
 
     protected String getProviderSelection() {
@@ -156,8 +143,7 @@ public abstract class ProviderMojoSupport
 
             this.template = artifactFactory.createArtifact("org.codehaus.groovy.maven.runtime", "gmaven-runtime-", base.getBaseVersion(), base.getScope(), base.getType());
 
-            // This is a synthetic artifact, using a reasonable sounding name to avoid confusing users about the dummy artifact
-            this.originating = artifactFactory.createBuildArtifact("org.codehaus.groovy.maven.runtime", "gmaven-runtime-loader-stub", base.getBaseVersion(), "jar");
+            this.originating = artifactFactory.createBuildArtifact("dummy", "dummy", "1.0", "jar");
         }
 
         public Artifact createQuery(final String key) {

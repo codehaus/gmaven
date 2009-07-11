@@ -22,27 +22,19 @@ import org.codehaus.groovy.maven.feature.ProviderException;
 import org.codehaus.groovy.maven.feature.ProviderManager;
 import org.codehaus.groovy.maven.feature.ProviderRegistry;
 import org.codehaus.groovy.maven.feature.ProviderSelector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Default {@link ProviderManager}.
  *
- * @plexus.component role="org.codehaus.groovy.maven.feature.ProviderManager"
+ * @plexus.component role="org.codehaus.groovy.maven.feature.ProviderManager" instantiation-strategy="singleton"
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class DefaultProviderManager
+    extends LoaderSupport
     implements ProviderManager
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
-    private Map cachedSelection = new HashMap();
-
     /**
      * @plexus.requirement
      *
@@ -88,33 +80,27 @@ public class DefaultProviderManager
     public Provider select(final String selection) {
         assert selection != null;
 
-        Provider provider = (Provider) cachedSelection.get(selection);
-        if (provider != null) {
-            log.debug("Using cached provider '{}' for selection: {}", provider, selection);    
+        log.debug("Selecting provider; selection: {}", selection);
+
+        StopWatch watch = new StopWatch();
+        watch.start();
+
+        Provider provider;
+
+        try {
+            provider = getSelector().select(getRegistry(), selection);
         }
-        else {
-            log.debug("Selecting provider; selection: {}", selection);
-
-            StopWatch watch = new StopWatch();
-            watch.start();
-
-            try {
-                provider = getSelector().select(getRegistry(), selection);
-            }
-            catch (Exception e) {
-                throw new ProviderException("Selection of provider failed; selection: " + selection, e);
-            }
-
-            if (provider == null) {
-                throw new ProviderException("No providers found matching selection: " + selection);
-            }
-
-            cachedSelection.put(selection, provider);
-            
-            watch.stop();
-
-            log.debug("Selected provider: {} ({})", provider, watch);
+        catch (Exception e) {
+            throw new ProviderException("Selection of provider failed; selection: " + selection, e);
         }
+
+        if (provider == null) {
+            throw new ProviderException("No providers found matching selection: " + selection);
+        }
+
+        watch.stop();
+
+        log.debug("Selected provider: {} ({})", provider, watch);
 
         return provider;
     }

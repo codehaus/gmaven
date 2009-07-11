@@ -22,7 +22,6 @@ import org.codehaus.groovy.maven.runtime.support.stubgen.model.MethodDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.ParameterDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.SourceDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.TypeDef;
-import org.codehaus.groovy.maven.runtime.support.stubgen.model.ModifiersDef;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -72,35 +71,34 @@ public abstract class RendererFactorySupport
         ClassDef script = new ClassDef();
         script.setParent(def);
         
-        script.getModifiers().add(ModifiersDef.PUBLIC);
+        script.getModifiers().add("public");
         script.setName(def.getScriptName());
-        script.setSuperClass("groovy.lang.Script");
+        script.setSuperClass(new TypeDef("groovy.lang.Script"));
 
         ConstructorDef ctor;
 
         ctor = new ConstructorDef();
-        ctor.getModifiers().add(ModifiersDef.PUBLIC);
+        ctor.getModifiers().add("public");
         script.addConstructor(ctor);
 
         ctor = new ConstructorDef();
-        ctor.getModifiers().add(ModifiersDef.PUBLIC);
-        ctor.addParameter("groovy.lang.Binding", "context");
+        ctor.getModifiers().add("public");
+        ctor.addParameter(new ParameterDef("groovy.lang.Binding", "context"));
         script.addConstructor(ctor);
 
         MethodDef method;
 
         method = new MethodDef();
-        method.getModifiers().add(ModifiersDef.PUBLIC).add(ModifiersDef.STATIC);
-        method.setReturns(new TypeDef(TypeDef.VOID));
+        method.getModifiers().add("public").add("static").add("transient");
+        method.setReturns(new TypeDef("void"));
         method.setName("main");
-        method.addParameter(new ParameterDef(new TypeDef(TypeDef.STRING, 1), "args"));
+        method.addParameter(new ParameterDef(new TypeDef("java.lang.String", 1), "args"));
         script.addMethod(method);
 
         method = new MethodDef();
-        method.getModifiers().add(ModifiersDef.PUBLIC);
-        method.setReturns(TypeDef.OBJECT);
+        method.getModifiers().add("public");
+        method.setReturns(new TypeDef("void"));
         method.setName("run");
-        script.addMethod(method);
 
         return createRenderer(script);
     }

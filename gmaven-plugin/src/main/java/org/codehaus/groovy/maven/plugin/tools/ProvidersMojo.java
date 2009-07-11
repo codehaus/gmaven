@@ -107,10 +107,10 @@ public class ProvidersMojo
     }
 
     protected void logEnvironment() {
-        log.trace("ClassLoader '{}' Class-Path:", getClass().getClassLoader());
-
         URL[] urls = ((URLClassLoader)getClass().getClassLoader()).getURLs();
-        
+
+        log.trace("ClassLoader Class-Path:");
+
         for (int i=0; i<urls.length; i++) {
             log.trace("    {}", urls[i]);
         }
