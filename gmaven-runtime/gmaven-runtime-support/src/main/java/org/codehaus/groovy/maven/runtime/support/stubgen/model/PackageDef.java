@@ -27,8 +27,11 @@ import java.util.Set;
  */
 public class PackageDef
     extends NamedElement
+    implements AnnotationsAware
 {
     private SourceDef parent;
+    
+    private final Set annotations = new LinkedHashSet();
 
     public SourceDef getParent() {
         return parent;
@@ -36,5 +39,15 @@ public class PackageDef
 
     public void setParent(final SourceDef def) {
         this.parent = def;
+    }
+
+    public void addAnnotation(final AnnotationDef def) {
+        assert def != null;
+
+        annotations.add(def);
+    }
+
+    public Set getAnnotations() {
+        return annotations;
     }
 }

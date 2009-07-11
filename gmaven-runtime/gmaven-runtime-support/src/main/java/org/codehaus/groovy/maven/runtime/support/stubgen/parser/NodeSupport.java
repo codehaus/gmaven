@@ -54,7 +54,7 @@ public abstract class NodeSupport
 
     public void dump(final String pad) {
         // FIXME: Use logging
-        System.out.println(pad + this);
+        System.err.println(pad + this);
         
         Node child = firstChild();
         if (child != null) {
@@ -69,7 +69,6 @@ public abstract class NodeSupport
 
     public void dump() {
         dump("");
-        System.out.println();
     }
 
     public boolean is(final String name) {

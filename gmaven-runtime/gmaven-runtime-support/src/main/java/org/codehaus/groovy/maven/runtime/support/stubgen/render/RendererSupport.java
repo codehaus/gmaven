@@ -16,10 +16,9 @@
 
 package org.codehaus.groovy.maven.runtime.support.stubgen.render;
 
+import org.codehaus.groovy.maven.runtime.support.stubgen.UnsupportedFeatureException;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.ClassDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.ConstructorDef;
-import org.codehaus.groovy.maven.runtime.support.stubgen.model.EnumConstantDef;
-import org.codehaus.groovy.maven.runtime.support.stubgen.model.EnumDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.FieldDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.ImportDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.JavaDocAware;
@@ -344,9 +343,7 @@ public class RendererSupport
         out.println(clazz.getName());
 
         switch (type.code) {
-
             case ClassDef.Type.CLASS_CODE:
-            case ClassDef.Type.ENUM_CODE:
             {
                 TypeDef superClass = clazz.getSuperClass();
                 if (superClass != null) {
@@ -367,7 +364,6 @@ public class RendererSupport
             break;
 
             case ClassDef.Type.INTERFACE_CODE:
-            case ClassDef.Type.ANNOTATION_CODE:
             {
                 Set implementz = clazz.getImplements();
                 assert implementz != null;
@@ -380,15 +376,14 @@ public class RendererSupport
             }
             break;
 
+            case ClassDef.Type.ENUM_CODE:
+                throw new UnsupportedFeatureException("enum");
+
             default:
                 throw new InternalError("Invalid class type: " + type); // Should never happen
         }
 
         out.println("{");
-
-        if (type.code == ClassDef.Type.ENUM_CODE) {
-            renderEnumConstants(out);
-        }
 
         renderFields(out);
 
@@ -402,7 +397,7 @@ public class RendererSupport
         // TODO: See when we need to set this and when it could be harmful?
 
         // Render synthetic methods
-        if (!clazz.isInterface() && !clazz.isAnnotation()) {
+        if (!clazz.isInterface()) {
             // Seperator if we have fields or methods
             if (!clazz.getFields().isEmpty() || !clazz.getMethods().isEmpty()) {
                 out.println();
@@ -412,38 +407,6 @@ public class RendererSupport
         }
 
         out.println("}");
-    }
-
-    protected void renderEnumConstants(final PrintWriter out) {
-        assert out != null;
-
-        Set constants = ((EnumDef)clazz).getConstants();
-        assert constants != null;
-
-        if (!constants.isEmpty()) {
-            out.print("    ");
-            
-            Iterator iter = constants.iterator();
-
-            while (iter.hasNext()) {
-                EnumConstantDef def = (EnumConstantDef)iter.next();
-
-                // TODO: Javadocs?
-
-                out.print(def.getName());
-
-                //
-                // TODO: Need to render initalizers
-                //
-
-                if (iter.hasNext()) {
-                    out.print(", ");
-                }
-            }
-
-            out.println(";");
-            out.println();
-        }
     }
 
     protected void renderFields(final PrintWriter out) {
@@ -754,6 +717,7 @@ public class RendererSupport
         }
     }
 
+
     protected void renderMethod(final PrintWriter out, final MethodDef def) {
         assert out != null;
         assert def != null;
@@ -796,14 +760,7 @@ public class RendererSupport
             renderTypeSet(out, throwz);
         }
 
-        if (def.getParent().isAnnotation()) {
-            //
-            // TODO: Render default muck
-            //
-            
-            out.println(";");
-        }
-        else if (def.getParent().isInterface() || def.getModifiers().isAbstract() || def.getModifiers().isNative()) {
+        if (def.getParent().isInterface() || def.getModifiers().isAbstract() || def.getModifiers().isNative()) {
             out.println(";");
         }
         else {
@@ -811,7 +768,7 @@ public class RendererSupport
 
             if (def.isConstructor()) {
                 assert def instanceof ConstructorDef;
-
+                
                 ConstructorDef ctor = (ConstructorDef)def;
 
                 if (ctor.isMagic()) {

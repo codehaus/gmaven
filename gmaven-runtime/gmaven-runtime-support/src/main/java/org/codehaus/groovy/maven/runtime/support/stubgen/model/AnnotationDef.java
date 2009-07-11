@@ -23,9 +23,7 @@ package org.codehaus.groovy.maven.runtime.support.stubgen.model;
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class AnnotationDef
-    extends ClassDef
+    extends NamedElement
 {
-    public AnnotationDef() {
-        super(Type.ANNOTATION);
-    }
+    // TODO:
 }
