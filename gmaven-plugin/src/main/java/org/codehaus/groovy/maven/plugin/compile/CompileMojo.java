@@ -69,6 +69,6 @@ public class CompileMojo
     }
 
     protected Set getForcedCompileSources() {
-        return compileState.getForcedCompilationSources(project);
+        return compileState.getForcedCompilationSources(true);
     }
 }

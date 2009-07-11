@@ -22,7 +22,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Representation of a class definition.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -36,11 +36,11 @@ public class ClassDef
 
     private TypeDef superClass;
 
-    private final Set implementz = new LinkedHashSet();
+    private Set implementz = new LinkedHashSet();
 
-    private final Set fields = new LinkedHashSet();
+    private Set fields = new LinkedHashSet();
 
-    private final Set methods = new LinkedHashSet();
+    private Set methods = new LinkedHashSet();
 
     public ClassDef() {
         this(Type.CLASS);
@@ -72,10 +72,6 @@ public class ClassDef
         return type == Type.ENUM;
     }
 
-    public boolean isAnnotation() {
-        return type == Type.ANNOTATION;    
-    }
-
     public PackageDef getPackage() {
         if (parent == null) {
             return null;
@@ -100,22 +96,10 @@ public class ClassDef
         this.superClass = type;
     }
 
-    public void setSuperClass(final String type) {
-        assert type != null;
-
-        setSuperClass(new TypeDef(type));
-    }
-    
     public void addImplements(final TypeDef type) {
         assert type != null;
 
         implementz.add(type);
-    }
-
-    public void addImplements(final String type) {
-        assert type != null;
-
-        addImplements(new TypeDef(type));
     }
 
     public Set getImplements() {
@@ -191,12 +175,6 @@ public class ClassDef
         public static final int ENUM_CODE = 2;
 
         public static final Type ENUM = new Type(ENUM_NAME, ENUM_CODE);
-
-        public static final String ANNOTATION_NAME = "@interface";
-
-        public static final int ANNOTATION_CODE = 3;
-
-        public static final Type ANNOTATION = new Type(ANNOTATION_NAME, ANNOTATION_CODE);
 
         public final String name;
 

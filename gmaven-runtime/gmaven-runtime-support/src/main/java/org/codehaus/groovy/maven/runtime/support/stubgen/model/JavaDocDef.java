@@ -20,7 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Representation of Javadoc definition.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -30,14 +30,8 @@ public class JavaDocDef
 {
     private String comment;
 
-    private final Set tags = new LinkedHashSet();
+    private Set tags = new LinkedHashSet();
 
-    public JavaDocDef() {}
-
-    public JavaDocDef(final String comment) {
-        setComment(comment);
-    }
-    
     public String getComment() {
         return comment;
     }

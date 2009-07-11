@@ -20,7 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Basic type which all entities extend from.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -31,7 +31,9 @@ public abstract class Entity
 {
     private JavaDocDef javaDoc;
 
-    private final ModifiersDef modifiers = new ModifiersDef();
+    private Set annotations = new LinkedHashSet();
+
+    private ModifiersDef modifiers = new ModifiersDef();
 
     public JavaDocDef getJavaDoc() {
         return javaDoc;
@@ -41,11 +43,17 @@ public abstract class Entity
         this.javaDoc = javaDoc;
     }
 
-    public void setJavaDoc(final String comment) {
-        setJavaDoc(new JavaDocDef(comment));
-    }
-
     public ModifiersDef getModifiers() {
         return modifiers;
+    }
+
+    public void addAnnotation(final AnnotationDef annotation) {
+        assert annotation != null;
+
+        annotations.add(annotation);
+    }
+
+    public Set getAnnotations() {
+        return annotations;
     }
 }

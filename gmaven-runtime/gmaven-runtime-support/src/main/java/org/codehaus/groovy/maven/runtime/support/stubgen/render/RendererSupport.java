@@ -16,10 +16,9 @@
 
 package org.codehaus.groovy.maven.runtime.support.stubgen.render;
 
+import org.codehaus.groovy.maven.runtime.support.stubgen.UnsupportedFeatureException;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.ClassDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.ConstructorDef;
-import org.codehaus.groovy.maven.runtime.support.stubgen.model.EnumConstantDef;
-import org.codehaus.groovy.maven.runtime.support.stubgen.model.EnumDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.FieldDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.ImportDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.JavaDocAware;
@@ -194,7 +193,7 @@ public class RendererSupport
         String name = def.getName();
 
         if (name == null) {
-            name = TypeDef.OBJECT;
+            name = "java.lang.Object";
         }
         else {
             ImportDef alias = (ImportDef)importAliases.get(name);
@@ -331,7 +330,7 @@ public class RendererSupport
 
         ModifiersDef modifiers = clazz.getModifiers();
         if (!modifiers.hasAccessModifiers()) {
-            modifiers.add(ModifiersDef.PUBLIC);
+            modifiers.add("public");
         }
 
         renderModifiers(out, clazz);
@@ -344,9 +343,7 @@ public class RendererSupport
         out.println(clazz.getName());
 
         switch (type.code) {
-
             case ClassDef.Type.CLASS_CODE:
-            case ClassDef.Type.ENUM_CODE:
             {
                 TypeDef superClass = clazz.getSuperClass();
                 if (superClass != null) {
@@ -367,7 +364,6 @@ public class RendererSupport
             break;
 
             case ClassDef.Type.INTERFACE_CODE:
-            case ClassDef.Type.ANNOTATION_CODE:
             {
                 Set implementz = clazz.getImplements();
                 assert implementz != null;
@@ -380,15 +376,14 @@ public class RendererSupport
             }
             break;
 
+            case ClassDef.Type.ENUM_CODE:
+                throw new UnsupportedFeatureException("enum");
+
             default:
                 throw new InternalError("Invalid class type: " + type); // Should never happen
         }
 
         out.println("{");
-
-        if (type.code == ClassDef.Type.ENUM_CODE) {
-            renderEnumConstants(out);
-        }
 
         renderFields(out);
 
@@ -402,7 +397,7 @@ public class RendererSupport
         // TODO: See when we need to set this and when it could be harmful?
 
         // Render synthetic methods
-        if (!clazz.isInterface() && !clazz.isAnnotation()) {
+        if (!clazz.isInterface()) {
             // Seperator if we have fields or methods
             if (!clazz.getFields().isEmpty() || !clazz.getMethods().isEmpty()) {
                 out.println();
@@ -412,38 +407,6 @@ public class RendererSupport
         }
 
         out.println("}");
-    }
-
-    protected void renderEnumConstants(final PrintWriter out) {
-        assert out != null;
-
-        Set constants = ((EnumDef)clazz).getConstants();
-        assert constants != null;
-
-        if (!constants.isEmpty()) {
-            out.print("    ");
-            
-            Iterator iter = constants.iterator();
-
-            while (iter.hasNext()) {
-                EnumConstantDef def = (EnumConstantDef)iter.next();
-
-                // TODO: Javadocs?
-
-                out.print(def.getName());
-
-                //
-                // TODO: Need to render initalizers
-                //
-
-                if (iter.hasNext()) {
-                    out.print(", ");
-                }
-            }
-
-            out.println(";");
-            out.println();
-        }
     }
 
     protected void renderFields(final PrintWriter out) {
@@ -511,15 +474,15 @@ public class RendererSupport
         field.setJavaDoc(def.getJavaDoc());
         field.setType(def.getType());
         field.setName(def.getName());
-        field.getModifiers().merge(def.getModifiers()).add(ModifiersDef.PRIVATE);
+        field.getModifiers().merge(def.getModifiers()).add("private");
         renderField(out, field);
 
         String name = capitalize(def.getName());
 
         // Setup the modifiers for property methods
         ModifiersDef modifiers = def.getModifiers();
-        modifiers.add(ModifiersDef.PUBLIC);
-        modifiers.remove(ModifiersDef.TRANSIENT).remove(ModifiersDef.VOLATILE);
+        modifiers.add("public");
+        modifiers.remove("transient").remove("volatile");
 
         MethodDef getter = new MethodDef();
         getter.setParent(def.getParent());
@@ -547,8 +510,8 @@ public class RendererSupport
             MethodDef setter = new MethodDef();
             setter.setParent(def.getParent());
             setter.setName("set" + name);
-            setter.setReturns(TypeDef.VOID);
-            setter.addParameter(def.getType(), "value");
+            setter.setReturns(new TypeDef("void"));
+            setter.addParameter(new ParameterDef(def.getType(), "value"));
             setter.getModifiers().merge(modifiers);
 
             if (!definedMethods.containsKey(setter.signature())) {
@@ -578,26 +541,10 @@ public class RendererSupport
 
         MethodDef def;
 
-        //
-        // FIXME: Should these already be configured in the model, since every Class must implement GroovyObject?
-        //
-
-        /*
-        java.lang.Object invokeMethod(java.lang.String s, java.lang.Object o);
-
-        java.lang.Object getProperty(java.lang.String s);
-
-        void setProperty(java.lang.String s, java.lang.Object o);
-
-        groovy.lang.MetaClass getMetaClass();
-
-        void setMetaClass(groovy.lang.MetaClass metaClass);
-        */
-
         def = new MethodDef();
         def.setParent(clazz);
-        def.getModifiers().add(ModifiersDef.PUBLIC);
-        def.setReturns("groovy.lang.MetaClass");
+        def.getModifiers().add("public");
+        def.setReturns(new TypeDef("groovy.lang.MetaClass"));
         def.setName("getMetaClass");
 
         if (!definedMethods.containsKey(def.signature())) {
@@ -607,10 +554,10 @@ public class RendererSupport
 
         def = new MethodDef();
         def.setParent(clazz);
-        def.getModifiers().add(ModifiersDef.PUBLIC);
-        def.setReturns(TypeDef.VOID);
+        def.getModifiers().add("public");
+        def.setReturns(new TypeDef("void"));
         def.setName("setMetaClass");
-        def.addParameter("groovy.lang.MetaClass", "metaClass");
+        def.addParameter(new ParameterDef("groovy.lang.MetaClass", "metaClass"));
 
         if (!definedMethods.containsKey(def.signature())) {
             renderMethod(out, def);
@@ -619,11 +566,11 @@ public class RendererSupport
 
         def = new MethodDef();
         def.setParent(clazz);
-        def.getModifiers().add(ModifiersDef.PUBLIC);
-        def.setReturns(TypeDef.OBJECT);
+        def.getModifiers().add("public");
+        def.setReturns(new TypeDef("java.lang.Object"));
         def.setName("invokeMethod");
-        def.addParameter(TypeDef.STRING, "name");
-        def.addParameter(TypeDef.OBJECT, "args");
+        def.addParameter(new ParameterDef("java.lang.String", "name"));
+        def.addParameter(new ParameterDef("java.lang.Object", "args"));
 
         if (!definedMethods.containsKey(def.signature())) {
             renderMethod(out, def);
@@ -632,10 +579,10 @@ public class RendererSupport
 
         def = new MethodDef();
         def.setParent(clazz);
-        def.getModifiers().add(ModifiersDef.PUBLIC);
-        def.setReturns(TypeDef.OBJECT);
+        def.getModifiers().add("public");
+        def.setReturns(new TypeDef("java.lang.Object"));
         def.setName("getProperty");
-        def.addParameter(TypeDef.STRING, "name");
+        def.addParameter(new ParameterDef("java.lang.String", "name"));
 
         if (!definedMethods.containsKey(def.signature())) {
             renderMethod(out, def);
@@ -644,11 +591,11 @@ public class RendererSupport
 
         def = new MethodDef();
         def.setParent(clazz);
-        def.getModifiers().add(ModifiersDef.PUBLIC);
-        def.setReturns(TypeDef.VOID);
+        def.getModifiers().add("public");
+        def.setReturns(new TypeDef("void"));
         def.setName("setProperty");
-        def.addParameter(TypeDef.STRING, "name");
-        def.addParameter(TypeDef.OBJECT, "value");
+        def.addParameter(new ParameterDef("java.lang.String", "name"));
+        def.addParameter(new ParameterDef("java.lang.Object", "value"));
 
         if (!definedMethods.containsKey(def.signature())) {
             renderMethod(out, def);
@@ -679,78 +626,27 @@ public class RendererSupport
         }
     }
 
-    protected ConstructorDef createMagicConstructor() {
-        ConstructorDef def = new ConstructorDef(true);
-        def.setParent(clazz);
-        def.getModifiers().add(ModifiersDef.PRIVATE);
-        def.setJavaDoc("Magic constructor");
-
-        // Add insane params which no one would ever use... :-(
-        def.addParameter("java.lang.Void", "void0");
-        def.addParameter("java.lang.Void", "void1");
-        def.addParameter("java.lang.Void", "void2");
-
-        //
-        // NOTE: This must match up with what is invoked in {@link #renderMagicConstructorInvoke}
-        //
-
-        return def;
-    }
-
-    protected void renderMagicConstructorInvoke(final PrintWriter out, final ConstructorDef def) {
-        assert out != null;
-        assert def != null;
-
-        out.print("        this((java.lang.Void)null, (java.lang.Void)null, (java.lang.Void)null");
-
-        // If the given constructor declares throwables, then invoke correct magic constructor
-        Iterator iter = def.getThrows().iterator();
-        while (iter.hasNext()) {
-            TypeDef type = (TypeDef)iter.next();
-            out.print(", ");
-            out.print("(");
-            out.print(type.getName());
-            out.print(")null");
-        }
-
-        out.println(");");
-    }
-    
     protected void renderMagicConstructors(final PrintWriter out) {
         assert out != null;
 
-        // Only render magic constructors if there are other constructors defined
+        //
+        // TODO: Could just use a cached magic super() from constrotors for each constructor to avoid needing this
+        //
+        
+        // Only render the magic constructor if there are other constructors defined
         if (!clazz.getConstructors().isEmpty()) {
-            int count=0;
+            ConstructorDef def = new ConstructorDef();
+            def.setMagic(true);
+            def.setParent(clazz);
+            def.getModifiers().add("private");
 
-            // Generate magic constructor for constructors with a throws clauses.
-            Iterator iter = clazz.getConstructors().iterator();
-            while (iter.hasNext()) {
-                ConstructorDef ctor = (ConstructorDef)iter.next();
-                if (!ctor.getThrows().isEmpty()) {
-                    // Add a magic constructor based on the default, adding a parameter for each throwable in the list
-                    Iterator iter2 = ctor.getThrows().iterator();
-                    ConstructorDef def = createMagicConstructor();
-                    def.getThrows().addAll(ctor.getThrows());
+            // Add insane params which no one would ever use... :-(
+            def.addParameter(new ParameterDef("java.lang.Void", "void1"));
+            def.addParameter(new ParameterDef("java.lang.Void", "void2"));
+            def.addParameter(new ParameterDef("java.lang.Void", "void3"));
 
-                    int i=0;
-                    while (iter2.hasNext()) {
-                        TypeDef type = (TypeDef)iter2.next();
-                        def.addParameter(type.getName(), "cause" + i++);
-                    }
-
-                    renderMethod(out, def);
-                    out.println();
-
-                    count++;
-                }
-            }
-
-            // Generate the default magic constructor, if we didn't generate any others
-            if (count == 0) {
-                renderMethod(out, createMagicConstructor());
-                out.println();
-            }
+            renderMethod(out, def);
+            out.println();
         }
     }
 
@@ -769,7 +665,7 @@ public class RendererSupport
 
             ModifiersDef modifiers = def.getModifiers();
             if (!modifiers.hasAccessModifiers()) {
-                modifiers.add(ModifiersDef.PUBLIC);
+                modifiers.add("public");
             }
 
             renderModifiers(out, def);
@@ -796,14 +692,7 @@ public class RendererSupport
             renderTypeSet(out, throwz);
         }
 
-        if (def.getParent().isAnnotation()) {
-            //
-            // TODO: Render default muck
-            //
-            
-            out.println(";");
-        }
-        else if (def.getParent().isInterface() || def.getModifiers().isAbstract() || def.getModifiers().isNative()) {
+        if (def.getParent().isInterface() || def.getModifiers().isAbstract() || def.getModifiers().isNative()) {
             out.println(";");
         }
         else {
@@ -811,7 +700,7 @@ public class RendererSupport
 
             if (def.isConstructor()) {
                 assert def instanceof ConstructorDef;
-
+                
                 ConstructorDef ctor = (ConstructorDef)def;
 
                 if (ctor.isMagic()) {
@@ -892,6 +781,13 @@ public class RendererSupport
         return null;
     }
 
+    protected void renderMagicConstructorInvoke(final PrintWriter out, final ConstructorDef def) {
+        assert out != null;
+        assert def != null;
+
+        out.println("        this((java.lang.Void)null, (java.lang.Void)null, (java.lang.Void)null);");
+    }
+
     protected void renderSuperParameters(final PrintWriter out, final ConstructorDef def) {
         assert out != null;
         assert def != null;
@@ -931,7 +827,7 @@ public class RendererSupport
         TypeDef type = def.getType();
         if (type == null) {
             // This is probably this, null or some dot expression, which needs to be handled better
-            out.print(TypeDef.NULL);
+            out.print("null");
         }
         else {
             out.print("(");

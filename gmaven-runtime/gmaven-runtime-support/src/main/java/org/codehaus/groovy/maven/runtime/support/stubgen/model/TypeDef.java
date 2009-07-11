@@ -17,7 +17,7 @@
 package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 
 /**
- * Representation of a type definition.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -25,36 +25,8 @@ package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 public class TypeDef
     extends NamedElement
 {
-    public static final String BYTE = "byte";
-
-    public static final String SHORT = "short";
-
-    public static final String INT = "int";
-
-    public static final String LONG = "long";
-
-    public static final String FLOAT = "float";
-
-    public static final String DOUBLE = "double";
-
-    public static final String CHAR = "char";
-
-    public static final String BOOLEAN = "boolean";
-
-    public static final String OBJECT = Object.class.getName();
-
-    public static final String STRING = String.class.getName();
-
-    public static final String BIG_INT = java.math.BigInteger.class.getName();
-
-    public static final String BIG_DECIMAL = java.math.BigDecimal.class.getName();
-
-    public static final String VOID = "void";
-
-    public static final String NULL = "null";
-
     private int dimensions;
-
+    
     public TypeDef() {}
 
     public TypeDef(final String name) {
@@ -75,12 +47,12 @@ public class TypeDef
     }
 
     public void setName(final String name) {
-        // NOTE: Try to keep some sanity, this isn't fool-proof, but should help some to avoid crappy errors.
+        // HACK: Try to keep some sanity, this isn't fool-proof, but should help some to avoid crappy errors.
         if ("Object".equals(name)) {
-            super.setName(OBJECT);
+            super.setName("java.lang.Object");
         }
         else if ("String".equals(name)) {
-            super.setName(STRING);
+            super.setName("java.lang.String");
         }
         else {
             super.setName(name);
@@ -93,7 +65,7 @@ public class TypeDef
         String name = getName();
 
         if (name == null) {
-            name = OBJECT;
+            name = "java.lang.Object";
         }
 
         buff.append(name);
@@ -115,41 +87,41 @@ public class TypeDef
         //
 
         if (name == null) {
-            return NULL;
+            return "null";
         }
         else if (dimensions > 0) {
-            return NULL;
+            return "null";
         }
-        else if (name.equals(BYTE)) {
+        else if (name.equals("byte")) {
             return "0";
         }
-        else if (name.equals(SHORT)) {
+        else if (name.equals("short")) {
             return "0";
         }
-        else if (name.equals(INT)) {
+        else if (name.equals("int")) {
             return "0";
         }
-        else if (name.equals(LONG)) {
+        else if (name.equals("long")) {
             return "0L";
         }
-        else if (name.equals(FLOAT)) {
+        else if (name.equals("float")) {
             return "0.0f";
         }
-        else if (name.equals(DOUBLE)) {
+        else if (name.equals("double")) {
             return "0.0d";
         }
-        else if (name.equals(CHAR)) {
+        else if (name.equals("char")) {
             return "'\\u0000'";
         }
-        else if (name.equals(BOOLEAN)) {
+        else if (name.equals("boolean")) {
             return "false";
         }
         else {
-            return NULL;
+            return "null";
         }
     }
 
     public boolean isBoolean() {
-        return BOOLEAN.equals(getName());
+        return "boolean".equals(getName());
     }
 }

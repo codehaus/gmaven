@@ -16,7 +16,6 @@
 
 package org.codehaus.groovy.maven.plugin.execute;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -38,16 +37,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Executes a Groovy script.
@@ -63,14 +57,6 @@ import java.util.Set;
 public class ExecuteMojo
     extends ComponentMojoSupport
 {
-    /** 
-     * The plugin dependencies.
-     * @parameter expression="${plugin.artifacts}" 
-     * @noinspection UnusedDeclaration
-     * @readonly
-     */
-    private List pluginArtifacts;
-
     /**
      * The source of the script to execute.  This can be a URL, File or script body.
      *
@@ -166,61 +152,8 @@ public class ExecuteMojo
         super(ScriptExecutor.KEY);
     }
 
-    /**
-     * Allow the script to work with every JAR dependency of both the project and plugin, including
-     * optional and provided dependencies. Runtime classpath elements are loaded first, so that 
-     * legacy behavior is not modified.  Additional elements are added first in the order of 
-     * project artifacts, then in the order of plugin artifacts.
-     */
-    protected List getProjectClasspathElements() throws DependencyResolutionRequiredException 
-    {
-    	Set results = new LinkedHashSet();
-    	
-    	for(Iterator i = project.getRuntimeClasspathElements().iterator(); i.hasNext(); )
-    	{
-    		String cpe = (String)i.next();
-    		try
-			{
-				results.add(new File(cpe).getCanonicalPath());
-			}
-			catch(IOException e)
-			{
-				throw new RuntimeException("Classpath element not found: " + cpe, e);
-			}
-    	}
-    	
-    	for(Iterator i = project.getArtifacts().iterator(); i.hasNext(); )
-    	{
-    		Artifact artifact = (Artifact)i.next();
-    		if(artifact.getType().equals("jar") && artifact.getClassifier() == null)
-    		{
-    			try
-    			{
-    				results.add(artifact.getFile().getCanonicalPath());
-    			}
-    			catch(IOException e)
-    			{
-    				throw new RuntimeException("Maven artifact file not found: " + artifact.toString(), e);
-    			}
-    		}
-    	}
-    	
-    	for(Iterator i = pluginArtifacts.iterator(); i.hasNext(); )
-    	{
-    		Artifact artifact = (Artifact)i.next();
-    		if(artifact.getType().equals("jar") && artifact.getClassifier() == null)
-    		{
-    			try
-    			{
-    				results.add(artifact.getFile().getCanonicalPath());
-    			}
-    			catch(IOException e)
-    			{
-    				throw new RuntimeException("Maven plugin-artifact file not found: " + artifact.toString(), e);
-    			}
-    		}
-    	}
-    	return new ArrayList(results);
+    protected List getProjectClasspathElements() throws DependencyResolutionRequiredException {
+        return project.getRuntimeClasspathElements();
     }
 
     protected ArtifactItem[] getUserClassspathElements() {

@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Representation of a source file definition.
+ * Defenetion of a source file.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -44,11 +44,11 @@ public class SourceDef
 
     private PackageDef pkg;
 
-    private final Set imports = new LinkedHashSet();
+    private Set imports = new LinkedHashSet();
 
-    private final Set classes = new LinkedHashSet();
+    private Set classes = new LinkedHashSet();
 
-    private final List statements = new LinkedList();
+    private List statements = new LinkedList();
 
     public URL getUrl() {
         return url;
