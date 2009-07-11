@@ -16,11 +16,11 @@
 
 package org.codehaus.groovy.maven.plugin.stubgen;
 
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.apache.maven.shared.model.fileset.FileSet;
-
 import java.io.File;
 import java.util.List;
+
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.shared.model.fileset.FileSet;
 
 /**
  * Generate Java stubs from Groovy sources.
@@ -68,6 +68,6 @@ public class GenerateStubsMojo
     }
 
     protected void forceCompile(final File file) {
-        compileState.addForcedCompilationSource(project, file);
+        compileState.addForcedCompilationSource(file);
     }
 }

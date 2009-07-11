@@ -16,8 +16,6 @@
 
 package org.codehaus.groovy.maven.gossip.config;
 
-import org.codehaus.groovy.maven.gossip.InternalLogger;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -30,8 +28,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.codehaus.groovy.maven.gossip.InternalLogger;
+
 /**
- * Container for Gossip configuration details.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -85,18 +85,17 @@ public final class Context
         }
     }
 
-    void dump() {
-        dump("    ");
-    }
+    private void dump() {
+        if (log.isTraceEnabled()) {
+            log.trace("Properties: ");
 
-    void dump(final String pad) {
-        assert pad != null;
+            for (Iterator iter = store.keySet().iterator(); iter.hasNext();) {
+                String name = (String)iter.next();
+                Object value = store.get(name);
 
-        for (Iterator iter = store.keySet().iterator(); iter.hasNext();) {
-            String name = (String)iter.next();
-            Object value = store.get(name);
 
-            log.debug("{}{}={}", new Object[] { pad, name, value });
+                log.trace("    {}={}", name, value);
+            }
         }
     }
 

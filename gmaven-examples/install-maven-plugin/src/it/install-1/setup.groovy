@@ -18,6 +18,8 @@
 // $Id$
 //
 
+/*
 def repo = new File(settings.localRepository)
 def target = new File(repo, 'org/codehaus/groovy/maven/examples/it/install-1/testing/install-1-testing.jar')
 ant.delete(file: target)
+*/

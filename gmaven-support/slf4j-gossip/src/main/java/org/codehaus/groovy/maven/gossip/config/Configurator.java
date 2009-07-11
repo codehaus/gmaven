@@ -16,30 +16,31 @@
 
 package org.codehaus.groovy.maven.gossip.config;
 
-import org.codehaus.groovy.maven.gossip.InternalLogger;
-import org.codehaus.groovy.maven.gossip.model.*;
-import org.codehaus.groovy.maven.gossip.model.filter.ConsoleWriter;
-import org.codehaus.groovy.maven.gossip.model.source.URLSource;
-import org.codehaus.groovy.maven.gossip.model.trigger.AlwaysTrigger;
-
 import java.net.URL;
 import java.util.Iterator;
 
+import org.codehaus.groovy.maven.gossip.InternalLogger;
+import org.codehaus.groovy.maven.gossip.model.Configuration;
+import org.codehaus.groovy.maven.gossip.model.EffectiveProfile;
+import org.codehaus.groovy.maven.gossip.model.Profile;
+import org.codehaus.groovy.maven.gossip.model.Source;
+import org.codehaus.groovy.maven.gossip.model.trigger.AlwaysTrigger;
+import org.codehaus.groovy.maven.gossip.model.source.URLSource;
+import org.codehaus.groovy.maven.gossip.model.filter.ConsoleWriter;
+
 /**
- * Configures Gossip.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class Configurator
 {
-    private static final String BOOTSTRAP_RESOURCE = "bootstrap.properties";
+    private static final String BOOTSTRAP_RESOURCE = "/META-INF/org/codehaus/groovy/maven/gossip/bootstrap.properties";
 
     private final InternalLogger log = InternalLogger.getLogger(getClass());
 
     public EffectiveProfile configure() {
-        log.debug("Configuring");
-
         Configuration root = new Configuration();
 
         EffectiveProfile profile = new EffectiveProfile();
@@ -72,13 +73,13 @@ public class Configurator
         assert profile != null;
         assert config != null;
 
-        log.debug("Activating profiles");
+        log.debug("Configure active profiles: {}", config);
 
         for (Iterator iter = config.profiles().iterator(); iter.hasNext();) {
             Profile p = (Profile) iter.next();
 
             if (p.isActive()) {
-                log.debug("Active profile: {}", p);
+                log.debug("    {}", p);
                 profile.addProfile(p);
             }
         }
@@ -95,13 +96,8 @@ public class Configurator
     }
 
     private Configuration loadBootstrap() throws Exception {
-        URL url = getClass().getResource(BOOTSTRAP_RESOURCE);
+        URL url = getClass().getClassLoader().getResource(BOOTSTRAP_RESOURCE);
 
-        // This should really never happen unless something is messed up, but don't toss an exception, let the fallback provider kickin
-        assert url != null : "Unable to load bootstrap resource: " + BOOTSTRAP_RESOURCE;
-
-        log.trace("Using bootstrap URL: {}", url);
-        
         URLSource source = new URLSource(url);
 
         return source.load();

@@ -16,12 +16,12 @@
 
 package org.codehaus.groovy.maven.plugin.compile;
 
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.apache.maven.shared.model.fileset.FileSet;
-
 import java.io.File;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.shared.model.fileset.FileSet;
 
 /**
  * Compiles Groovy <em>test</em> sources.
@@ -79,7 +79,7 @@ public class TestCompileMojo
     }
 
     protected Set getForcedCompileSources() {
-        return compileState.getForcedCompilationTestSources(project);
+        return compileState.getForcedCompilationTestSources(true);
     }
 
     protected void doExecute() throws Exception {

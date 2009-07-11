@@ -16,9 +16,9 @@
 
 package org.codehaus.groovy.maven.runtime;
 
-import org.codehaus.groovy.maven.feature.Component;
-
 import java.io.PrintWriter;
+
+import org.codehaus.groovy.maven.feature.Component;
 
 /**
  * Provides an abstraction to sanatize Groovy stack-traces.

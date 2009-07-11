@@ -20,7 +20,7 @@ import org.slf4j.helpers.NOPMakerAdapter;
 import org.slf4j.spi.MDCAdapter;
 
 /**
- * Gossip MDC binder for SLF4J.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

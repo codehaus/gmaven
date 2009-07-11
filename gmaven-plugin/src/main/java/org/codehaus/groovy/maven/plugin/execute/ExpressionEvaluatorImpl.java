@@ -22,6 +22,8 @@ package org.codehaus.groovy.maven.plugin.execute;
 //       to get objects in properties to resolve correctly when chained together.
 //
 
+import java.io.File;
+
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.descriptor.MojoDescriptor;
@@ -31,8 +33,6 @@ import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluatio
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.util.introspection.ReflectionValueExtractor;
-
-import java.io.File;
 
 /**
  * Custom expresion evaluation for Groovy executions.

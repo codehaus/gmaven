@@ -20,7 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Representation of a parameter definition.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -33,7 +33,9 @@ public class ParameterDef
 
     private TypeDef type;
 
-    private final ModifiersDef modifiers = new ModifiersDef();
+    private Set annotations = new LinkedHashSet();
+
+    private ModifiersDef modifiers = new ModifiersDef();
 
     public ParameterDef() {}
 
@@ -42,8 +44,8 @@ public class ParameterDef
         setName(name);
     }
 
-    public ParameterDef(final String type, final String name) {
-        this(new TypeDef(type), name);
+    public ParameterDef(final String typeName, final String name) {
+        this(new TypeDef(typeName), name);
     }
 
     public MethodDef getParent() {
@@ -62,6 +64,16 @@ public class ParameterDef
         this.type = type;
     }
 
+    public void addAnnotation(final AnnotationDef annotation) {
+        assert annotation != null;
+
+        annotations.add(annotation);
+    }
+
+    public Set getAnnotations() {
+        return annotations;
+    }
+    
     public ModifiersDef getModifiers() {
         return modifiers;
     }

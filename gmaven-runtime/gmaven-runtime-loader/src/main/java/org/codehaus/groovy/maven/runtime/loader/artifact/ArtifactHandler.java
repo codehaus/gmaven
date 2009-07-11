@@ -23,7 +23,7 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 
 /**
- * Deals with the artifact details for the {@link ArtifactProviderLoader}.
+ * Deals with the artifact detals for the {@link ArtifactProviderLoader}.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

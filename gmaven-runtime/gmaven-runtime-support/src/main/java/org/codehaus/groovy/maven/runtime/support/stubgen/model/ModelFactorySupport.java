@@ -17,6 +17,7 @@
 package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 
 import org.codehaus.groovy.maven.runtime.support.stubgen.UnexpectedNodeException;
+import org.codehaus.groovy.maven.runtime.support.stubgen.UnsupportedFeatureException;
 import org.codehaus.groovy.maven.runtime.support.stubgen.parser.Node;
 import org.codehaus.groovy.maven.runtime.support.stubgen.parser.Parser;
 import org.codehaus.groovy.maven.runtime.support.stubgen.parser.ParserFactory;
@@ -26,9 +27,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.Iterator;
 
 /**
  * Provides support for {@link ModelFactory} implementations.
@@ -58,15 +59,8 @@ public abstract class ModelFactorySupport
     public SourceDef create(final URL input) throws Exception {
         assert input != null;
 
-        return create(input, SourceType.forURL(input));
-    }
-
-    public SourceDef create(final URL input, final SourceType type) throws Exception {
-        assert input != null;
-        assert type != null;
-
         // Setup the root model element
-        source = createRoot(input, type);
+        source = createRoot(input);
 
         // Reset internal state
         lastNode = null;
@@ -92,12 +86,13 @@ public abstract class ModelFactorySupport
         return source;
     }
 
-    protected SourceDef createRoot(final URL input, final SourceType type) {
+    protected SourceDef createRoot(final URL input) {
         assert input != null;
-        assert type != null;
 
         SourceDef def = new SourceDef();
         def.setUrl(input);
+
+        SourceType type = SourceType.forURL(input);
         def.setType(type);
 
         addDefaultImports(def);
@@ -131,14 +126,10 @@ public abstract class ModelFactorySupport
                 methodDef(node);
             }
             else if (node.is("ENUM_DEF")) {
-                enumDef(node);
-            }
-            else if (node.is("ANNOTATION_DEF")) {
-                annotationDef(node);
+                throw new UnsupportedFeatureException("enum");
             }
             else {
-                // everything else should be some sort of statement
-                source.addStatement(node);
+                throw new UnexpectedNodeException(node);
             }
 
             node = node.nextSibling();
@@ -233,7 +224,6 @@ public abstract class ModelFactorySupport
         assert parent != null;
 
         ClassDef def = new ClassDef();
-        def.addImplements("groovy.lang.GroovyObject");
 
         clazz = def;
 
@@ -244,10 +234,7 @@ public abstract class ModelFactorySupport
         node = name(def, node);
 
         if (node.is("TYPE_PARAMETERS")) {
-            //
-            // FIXME: Support generics
-            //
-            node = node.nextSibling();
+            throw new UnsupportedFeatureException("generics");
         }
 
         if (node.is("EXTENDS_CLAUSE")) {
@@ -256,79 +243,6 @@ public abstract class ModelFactorySupport
         }
 
         if (node.is("IMPLEMENTS_CLAUSE")) {
-            def.getImplements().addAll(interfaces(node));
-            node = node.nextSibling();
-        }
-
-        javadocs(def, parent);
-
-        objectBlock(node);
-
-        source.addClass(def);
-    }
-
-    protected void enumDef(final Node parent) {
-        assert parent != null;
-
-        parent.ensure("ENUM_DEF");
-
-        EnumDef def = new EnumDef();
-
-        clazz = def;
-
-        Node node = parent.firstChild();
-
-        node = modifiers(def, node);
-
-        node = name(def, node);
-
-        if (node.is("TYPE_PARAMETERS")) {
-            //
-            // FIXME: Support generics
-            //
-            node = node.nextSibling();
-        }
-
-        if (node.is("EXTENDS_CLAUSE")) {
-            def.setSuperClass(type(node));
-            node = node.nextSibling();
-        }
-
-        if (node.is("IMPLEMENTS_CLAUSE")) {
-            def.getImplements().addAll(interfaces(node));
-            node = node.nextSibling();
-        }
-
-        javadocs(def, parent);
-
-        objectBlock(node);
-
-        source.addClass(def);
-    }
-
-    protected void annotationDef(final Node parent) {
-        assert parent != null;
-
-        parent.ensure("ANNOTATION_DEF");
-
-        AnnotationDef def = new AnnotationDef();
-
-        clazz = def;
-
-        Node node = parent.firstChild();
-
-        node = modifiers(def, node);
-
-        node = name(def, node);
-
-        if (node.is("TYPE_PARAMETERS")) {
-            //
-            // FIXME: Support generics
-            //
-            node = node.nextSibling();
-        }
-
-        if (node.is("EXTENDS_CLAUSE")) {
             def.getImplements().addAll(interfaces(node));
             node = node.nextSibling();
         }
@@ -352,23 +266,17 @@ public abstract class ModelFactorySupport
             else if (node.is("METHOD_DEF")) {
                 methodDef(node);
             }
-            else if (node.is("ANNOTATION_FIELD_DEF")) {
-                annotationFieldDef(node);
-            }
             else if (node.is("CTOR_IDENT")) {
                 constructorDef(node);
             }
             else if (node.is("VARIABLE_DEF")) {
                 fieldDef(node);
             }
-            else if (node.is("ENUM_DEF")) {
-                enumDef(node);
-            }
-            else if (node.is("ENUM_CONSTANT_DEF")) {
-                enumConstantDef(node);
-            }
             else if (node.is(new String[] { "STATIC_INIT", "INSTANCE_INIT" })) {
                 // Ignore
+            }
+            else if (node.is(new String[] { "ENUM_DEF", "ENUM_CONSTANT_DEF" })) {
+                throw new UnsupportedFeatureException("enum");
             }
             else {
                 throw new UnexpectedNodeException(node);
@@ -408,10 +316,10 @@ public abstract class ModelFactorySupport
             if (node != null) {
                 if (node.is(new String[] { "SUPER_CTOR_CALL", "CTOR_CALL" })) {
                     if (node.is("SUPER_CTOR_CALL")) {
-                        target.setSuperType(ConstructorDef.SUPER);
+                        target.setSuperType("super");
                     }
                     else {
-                        target.setSuperType(ConstructorDef.THIS);
+                        target.setSuperType("this");
                     }
 
                     node = node.firstChild();
@@ -465,32 +373,38 @@ public abstract class ModelFactorySupport
 
             def.setType(type(node));
         }
+        else if (node.is("LITERAL_this")) {
+            // TODO: this support
+        }
+        else if (node.is("LITERAL_null")) {
+            // TODO: null support
+        }
         else if (node.is(new String[] { "LITERAL_true", "LITERAL_false" })) {
-            def.setType(TypeDef.BOOLEAN);
+            def.setType(new TypeDef("boolean"));
         }
         else if (node.is("STRING_LITERAL")) {
-            def.setType(TypeDef.STRING);
+            def.setType(new TypeDef("java.lang.String"));
         }
         else if (node.is("NUM_INT")) {
-            def.setType(TypeDef.INT);
+            def.setType(new TypeDef("int"));
         }
         else if (node.is("NUM_LONG")) {
-            def.setType(TypeDef.LONG);
+            def.setType(new TypeDef("long"));
         }
         else if (node.is("NUM_FLOAT")) {
-            def.setType(TypeDef.FLOAT);
+            def.setType(new TypeDef("float"));
         }
         else if (node.is("NUM_DOUBLE")) {
-            def.setType(TypeDef.DOUBLE);
+            def.setType(new TypeDef("double"));
         }
         else if (node.is("NUM_BIG_INT")) {
-            def.setType(TypeDef.BIG_INT);
+            def.setType(new TypeDef("java.math.BigInteger"));
         }
         else if (node.is("NUM_BIG_DECIMAL")) {
-            def.setType(TypeDef.BIG_DECIMAL);
+            def.setType(new TypeDef("java.math.BigDecimal"));
         }
-        else if (node.is("STRING_CONSTRUCTOR")) {
-            def.setType(TypeDef.STRING);
+        else if (node.is("DOT")) {
+            // TODO: dot support
         }
         else if (node.is("IDENT")) {
             // Could be a reference to parameters
@@ -512,9 +426,9 @@ public abstract class ModelFactorySupport
             }
         }
         else {
-            // Lets just assume the parser has done its job, but we don't have type information
-            // so all we can do is use a null value w/o any cast
-            // throw new UnexpectedNodeException(node);
+            parent.dump();
+
+            throw new UnexpectedNodeException(node);
         }
 
         target.addSuperParameter(def);
@@ -528,10 +442,7 @@ public abstract class ModelFactorySupport
         Node node = parent.firstChild();
 
         if (node.is("TYPE_PARAMETERS")) {
-            //
-            // FIXME: Support generics
-            //
-            node = node.nextSibling();
+            throw new UnsupportedFeatureException("generics");
         }
 
         node = modifiers(def, node);
@@ -560,43 +471,6 @@ public abstract class ModelFactorySupport
         clazz.addMethod(def);
     }
 
-    protected void annotationFieldDef(final Node parent) {
-        assert parent != null;
-        
-        // methodDef(parent);
-
-        MethodDef def = new MethodDef();
-
-        Node node = parent.firstChild();
-
-        if (node.is("TYPE_PARAMETERS")) {
-            //
-            // FIXME: Support generics
-            //
-            node = node.nextSibling();
-        }
-
-        node = modifiers(def, node);
-
-        if (node.is("TYPE")) {
-            def.setReturns(type(node));
-            node = node.nextSibling();
-        }
-        else {
-            def.setReturns(new TypeDef());
-        }
-
-        //
-        // TODO: Support "default"
-        //
-        
-        node = name(def, node);
-
-        javadocs(def, parent);
-
-        clazz.addMethod(def);
-    }
-    
     protected void fieldDef(final Node parent) {
         assert parent != null;
 
@@ -619,44 +493,6 @@ public abstract class ModelFactorySupport
         javadocs(def, parent);
 
         clazz.addField(def);
-    }
-
-    protected void enumConstantDef(final Node parent) {
-        assert parent != null;
-
-        parent.ensure("ENUM_CONSTANT_DEF");
-
-        assert clazz instanceof EnumDef;
-        EnumDef def = (EnumDef)clazz;
-
-        Node node = parent.firstChild();
-
-        if (node.is("ANNOTATIONS")) {
-            node = node.nextSibling();
-        }
-
-        String name = identifier(node);
-
-        //
-        // TODO: Determine initialization expression
-        //
-
-        /*
-        Expression init = null;
-        element = element.getNextSibling();
-        if (element!=null) {
-            init = expression(element);
-            if (isType(ELIST,element)) {
-            	if(init instanceof ListExpression && !((ListExpression)init).isWrapped()) {
-                    ListExpression le = new ListExpression();
-                    le.addExpression(init);
-                    init = le;
-            	}
-            }
-        }
-        */
-
-        def.addConstant(name);
     }
 
     //
@@ -684,43 +520,38 @@ public abstract class ModelFactorySupport
 
         for (Node node = parent.firstChild(); node != null; node = node.nextSibling()) {
 
-            if (node.is(new String[] { "STRICTFP", "STATIC_IMPORT" })) {
+            if (node.is(new String[] { "STRICTFP", "STATIC_IMPORT", "ANNOTATION" })) {
                 // ignore
             }
-            if (node.is("ANNOTATION")) {
-                //
-                // FIXME: Add annotation support
-                //
-            }
             else if (node.is("LITERAL_private")) {
-                def.add(ModifiersDef.PRIVATE);
+                def.add("private");
             }
             else if (node.is("LITERAL_protected")) {
-                def.add(ModifiersDef.PROTECTED);
+                def.add("protected");
             }
             else if (node.is("LITERAL_public")) {
-                def.add(ModifiersDef.PUBLIC);
+                def.add("public");
             }
             else if (node.is("ABSTRACT")) {
-                def.add(ModifiersDef.ABSTRACT);
+                def.add("abstract");
             }
             else if (node.is("FINAL")) {
-                def.add(ModifiersDef.FINAL);
+                def.add("final");
             }
             else if (node.is("LITERAL_native")) {
-                def.add(ModifiersDef.NATIVE);
+                def.add("native");
             }
             else if (node.is("LITERAL_static")) {
-                def.add(ModifiersDef.STATIC);
+                def.add("static");
             }
             else if (node.is("LITERAL_synchronized")) {
-                def.add(ModifiersDef.SYNCHRONIZED);
+                def.add("synchronized");
             }
             else if (node.is("LITERAL_transient")) {
-                def.add(ModifiersDef.TRANSIENT);
+                def.add("transient");
             }
             else if (node.is("LITERAL_volatile")) {
-                def.add(ModifiersDef.VOLATILE);
+                def.add("volatile");
             }
             else {
                 throw new UnexpectedNodeException(node);
@@ -827,18 +658,15 @@ public abstract class ModelFactorySupport
         }
 
         if (node != null) {
-            int dim = 0;
-
-            // Determine array dimentions if there are any
-            while (node.is("ARRAY_DECLARATOR")) {
-                node = node.firstChild();
-                dim++;
+            if (node.is(new String[] { "INDEX_OP", "ARRAY_DECLARATOR" })) {
+                def.setName(qualifiedName(node.firstChild()));
+                def.setDimensions(1);
             }
-
-            def.setDimensions(dim);
-            def.setName(qualifiedName(node));
+            else {
+                def.setName(qualifiedName(node));
+            }
         }
-        
+
         return def;
     }
 

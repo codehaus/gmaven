@@ -29,5 +29,5 @@ public interface Console
 {
     String KEY = Console.class.getName();
 
-    void execute(ClassLoader classLoader) throws Exception;
+    void execute() throws Exception;
 }

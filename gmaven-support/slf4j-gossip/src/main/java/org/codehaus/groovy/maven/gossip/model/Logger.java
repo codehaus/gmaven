@@ -16,13 +16,13 @@
 
 package org.codehaus.groovy.maven.gossip.model;
 
-import org.codehaus.groovy.maven.gossip.Level;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.groovy.maven.gossip.Level;
+
 /**
- * Logger node.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -44,19 +44,12 @@ public class Logger
         setName(name);
     }
 
-    public Logger(final String name, final String level) {
-        assert name != null;
-        assert level != null;
-
-        setName(name);
-        setLevel(level);
-    }
-
     public String toString() {
-        return "Logger{" +
-                "name='" + name + '\'' +
-                ", level=" + level +
-                '}';
+        if (level == null) {
+            return "Logger[" + getName()  + "]";
+        }
+
+        return "Logger[" + getName()  + "/" + level + "]";
     }
 
     public String getName() {

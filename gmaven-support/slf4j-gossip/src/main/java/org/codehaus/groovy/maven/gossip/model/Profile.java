@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Profile node.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -48,9 +48,7 @@ public class Profile
     }
 
     public String toString() {
-        return "Profile{" +
-                "name='" + name + '\'' +
-                '}';
+        return "Profile[" + getName() + "]";
     }
 
     public String getName() {

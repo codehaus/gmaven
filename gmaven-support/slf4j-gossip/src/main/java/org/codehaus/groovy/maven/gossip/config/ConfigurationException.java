@@ -17,7 +17,7 @@
 package org.codehaus.groovy.maven.gossip.config;
 
 /**
- * Thrown to indicate a failure has occured while configuring Gossip.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

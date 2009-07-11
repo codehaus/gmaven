@@ -16,22 +16,15 @@
 
 package org.codehaus.groovy.maven.plugin.tools;
 
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.codehaus.groovy.maven.feature.Component;
 import org.codehaus.groovy.maven.plugin.ComponentMojoSupport;
+import org.codehaus.groovy.maven.feature.Component;
 import org.codehaus.groovy.maven.runtime.Console;
-import org.codehaus.groovy.maven.runtime.loader.realm.RealmManager;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-
-import java.net.URLClassLoader;
-import java.util.List;
 
 /**
  * Launches the Groovy GUI console.
  *
  * @goal console
  * @requiresProject false
- * @requiresDependencyResolution test
  * @since 1.0-beta-2
  * 
  * @version $Id$
@@ -40,30 +33,15 @@ import java.util.List;
 public class ConsoleMojo
     extends ComponentMojoSupport
 {
-    /**
-     * @component
-     *
-     * @noinspection UnusedDeclaration
-     */
-    private RealmManager realmManager;
-
     public ConsoleMojo() {
         super(Console.KEY);
     }
 
-    protected List getProjectClasspathElements() throws DependencyResolutionRequiredException {
-        return project.getTestClasspathElements();
-    }
-    
     protected void process(final Component component) throws Exception {
         assert component != null;
 
         Console console = (Console) component;
-
-        ClassRealm realm = realmManager.createComponentRealm(provider(), createClassPath());
-
-        console.execute(realm);
-
-        realmManager.releaseComponentRealm(realm);
+        
+        console.execute();
     }
 }

@@ -16,6 +16,12 @@
 
 package org.codehaus.groovy.maven.plugin;
 
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -34,12 +40,6 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.groovy.maven.common.ArtifactItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Support for Mojo implementations.
@@ -107,12 +107,8 @@ public abstract class MojoSupport
         // Add the projects dependencies
         List files = getProjectClasspathElements();
         if (files != null) {
-            log.debug("Project Classpath:");
-
             for (int i = 0; i < files.size(); ++i) {
-                URL url = new File((String)files.get(i)).toURI().toURL();
-                list.add(url);
-                log.debug("    {}", url);
+                list.add(new File((String)files.get(i)).toURI().toURL());
             }
         }
 
@@ -120,17 +116,24 @@ public abstract class MojoSupport
         ArtifactItem[] items = getUserClassspathElements();
 
         if (items != null) {
-            log.debug("User Classpath:");
-
             for (int i=0; i < items.length; i++) {
                 Artifact artifact = getArtifact(items[i]);
-                URL url = artifact.getFile().toURI().toURL();
-                list.add(url);
-                log.debug("    {}", url);
+                list.add(artifact.getFile().toURI().toURL());
             }
         }
 
-        return (URL[])list.toArray(new URL[list.size()]);
+        URL[] urls = (URL[])list.toArray(new URL[list.size()]);
+
+        // Dump the classpath
+        if (log.isDebugEnabled()) {
+            log.debug("Classpath:");
+
+            for (int i=0; i < urls.length; i++) {
+                log.debug("    {}", urls[i]);
+            }
+        }
+
+        return urls;
     }
 
     //
@@ -207,7 +210,9 @@ public abstract class MojoSupport
         VersionRange range;
         try {
             range = VersionRange.createFromVersionSpec(item.getVersion());
-            log.trace("Using version range: {}", range);
+            if (log.isDebugEnabled()) {
+                log.debug("Using version range: " + range);
+            }
         }
         catch (InvalidVersionSpecificationException e) {
             throw new MojoExecutionException("Could not create range for version: " + item.getVersion(), e);
@@ -286,7 +291,7 @@ public abstract class MojoSupport
      * @param item  The item to fill in missing version details into
      */
     private void fillMissingArtifactVersion(final ArtifactItem item) {
-        log.trace("Attempting to find missing version in {}:{}", item.getGroupId() , item.getArtifactId());
+        log.debug("Attempting to find missing version in {}:{}", item.getGroupId() , item.getArtifactId());
 
         List list = project.getDependencies();
 
@@ -297,7 +302,7 @@ public abstract class MojoSupport
                 && dependency.getArtifactId().equals(item.getArtifactId())
                 && dependency.getType().equals(item.getType()))
             {
-                log.trace("Found missing version: {} in dependency list", dependency.getVersion());
+                log.debug("Found missing version: {} in dependency list", dependency.getVersion());
 
                 item.setVersion(dependency.getVersion());
 
@@ -314,7 +319,7 @@ public abstract class MojoSupport
                 && dependency.getArtifactId().equals(item.getArtifactId())
                 && dependency.getType().equals(item.getType()))
             {
-                log.trace("Found missing version: {} in dependency management list", dependency.getVersion());
+                log.debug("Found missing version: {} in dependency management list", dependency.getVersion());
 
                 item.setVersion(dependency.getVersion());
             }

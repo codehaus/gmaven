@@ -24,12 +24,13 @@
     <parent>
         <groupId>org.codehaus.groovy.maven</groupId>
         <artifactId>gmaven</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.0-rc-1</version>
     </parent>
 
     <groupId>org.codehaus.groovy.maven.feature</groupId>
     <name>GMaven Feature</name>
     <artifactId>gmaven-feature</artifactId>
+  <version>1.0-rc-1 </version>
     <packaging>pom</packaging>
     
     <description>

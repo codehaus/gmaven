@@ -16,44 +16,36 @@
 
 package org.codehaus.groovy.maven.plugin.execute;
 
-import org.apache.maven.artifact.Artifact;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.settings.Settings;
-import org.codehaus.groovy.maven.common.ArtifactItem;
+import org.codehaus.groovy.maven.plugin.ComponentMojoSupport;
 import org.codehaus.groovy.maven.feature.Component;
 import org.codehaus.groovy.maven.feature.Configuration;
-import org.codehaus.groovy.maven.plugin.ComponentMojoSupport;
 import org.codehaus.groovy.maven.runtime.ScriptExecutor;
-import org.codehaus.groovy.maven.runtime.loader.realm.RealmManager;
 import org.codehaus.groovy.maven.runtime.support.util.ResourceLoaderImpl;
 import org.codehaus.groovy.maven.runtime.util.Callable;
 import org.codehaus.groovy.maven.runtime.util.ClassSource;
 import org.codehaus.groovy.maven.runtime.util.MagicAttribute;
 import org.codehaus.groovy.maven.runtime.util.ResourceLoader;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.groovy.maven.common.ArtifactItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Executes a Groovy script.
  *
  * @goal execute
- * @requiresDependencyResolution test
+ * @requiresDependencyResolution runtime
  * @configurator override
  * @since 1.0-alpha-1
  *
@@ -63,14 +55,6 @@ import java.util.Set;
 public class ExecuteMojo
     extends ComponentMojoSupport
 {
-    /** 
-     * The plugin dependencies.
-     * @parameter expression="${plugin.artifacts}" 
-     * @noinspection UnusedDeclaration
-     * @readonly
-     */
-    private List pluginArtifacts;
-
     /**
      * The source of the script to execute.  This can be a URL, File or script body.
      *
@@ -154,73 +138,13 @@ public class ExecuteMojo
      * @noinspection UnusedDeclaration
      */
     private Settings settings;
-
-    /**
-     * @component
-     *
-     * @noinspection UnusedDeclaration
-     */
-    private RealmManager realmManager;
     
     public ExecuteMojo() {
         super(ScriptExecutor.KEY);
     }
 
-    /**
-     * Allow the script to work with every JAR dependency of both the project and plugin, including
-     * optional and provided dependencies. Runtime classpath elements are loaded first, so that 
-     * legacy behavior is not modified.  Additional elements are added first in the order of 
-     * project artifacts, then in the order of plugin artifacts.
-     */
-    protected List getProjectClasspathElements() throws DependencyResolutionRequiredException 
-    {
-    	Set results = new LinkedHashSet();
-    	
-    	for(Iterator i = project.getRuntimeClasspathElements().iterator(); i.hasNext(); )
-    	{
-    		String cpe = (String)i.next();
-    		try
-			{
-				results.add(new File(cpe).getCanonicalPath());
-			}
-			catch(IOException e)
-			{
-				throw new RuntimeException("Classpath element not found: " + cpe, e);
-			}
-    	}
-    	
-    	for(Iterator i = project.getArtifacts().iterator(); i.hasNext(); )
-    	{
-    		Artifact artifact = (Artifact)i.next();
-    		if(artifact.getType().equals("jar") && artifact.getClassifier() == null)
-    		{
-    			try
-    			{
-    				results.add(artifact.getFile().getCanonicalPath());
-    			}
-    			catch(IOException e)
-    			{
-    				throw new RuntimeException("Maven artifact file not found: " + artifact.toString(), e);
-    			}
-    		}
-    	}
-    	
-    	for(Iterator i = pluginArtifacts.iterator(); i.hasNext(); )
-    	{
-    		Artifact artifact = (Artifact)i.next();
-    		if(artifact.getType().equals("jar") && artifact.getClassifier() == null)
-    		{
-    			try
-    			{
-    				results.add(artifact.getFile().getCanonicalPath());
-    			}
-    			catch(IOException e)
-    			{
-    				throw new RuntimeException("Maven plugin-artifact file not found: " + artifact.toString(), e);
-    			}
-    		}
-    	}
-    	return new ArrayList(results);
+    protected List getProjectClasspathElements() throws DependencyResolutionRequiredException {
+        return project.getRuntimeClasspathElements();
     }
 
     protected ArtifactItem[] getUserClassspathElements() {
@@ -238,19 +162,20 @@ public class ExecuteMojo
         
         ClassSource classSource = ClassSource.forValue(source.configuration.getValue());
 
-        ClassRealm realm = realmManager.createComponentRealm(provider(), createClassPath());
+        // Use the providers class-loader as a parent to resolve the Groovy runtime correctly
+        ClassLoader parent = provider().getClass().getClassLoader();
 
-        ResourceLoader resourceLoader = new MojoResourceLoader(realm, classSource);
+        URLClassLoader classLoader = new URLClassLoader(createClassPath(), parent);
+
+        ResourceLoader resourceLoader = new MojoResourceLoader(classLoader, classSource);
 
         Configuration context = createContext();
 
         log.debug("Executing {} w/context: {}", source, context);
 
-        Object result = executor.execute(classSource, realm, resourceLoader, context);
+        Object result = executor.execute(classSource, classLoader, resourceLoader, context);
 
         log.debug("Result: {}", result);
-
-        realmManager.releaseComponentRealm(realm);
     }
 
     private Configuration createContext() {
@@ -262,9 +187,9 @@ public class ExecuteMojo
         context.set("log", logger);
 
         // Add a custom project to resolve properties
-        MavenProject projectAdapter = new GroovyMavenProjectAdapter(project, session, properties, defaults);
-        context.set("project", projectAdapter);
-        context.set("pom", projectAdapter);
+        MavenProject p = new GroovyMavenProjectAdapter(project, session, properties, defaults);
+        context.set("project", p);
+        context.set("pom", p);
 
         // Stuff in some other Maven bits
         context.set("session", session);

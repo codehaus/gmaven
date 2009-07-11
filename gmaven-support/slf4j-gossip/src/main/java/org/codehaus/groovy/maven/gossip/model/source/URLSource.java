@@ -16,15 +16,15 @@
 
 package org.codehaus.groovy.maven.gossip.model.source;
 
-import org.codehaus.groovy.maven.gossip.config.MissingPropertyException;
-import org.codehaus.groovy.maven.gossip.model.Configuration;
-import org.codehaus.groovy.maven.gossip.model.Source;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.codehaus.groovy.maven.gossip.config.ConfigurationException;
+import org.codehaus.groovy.maven.gossip.model.Configuration;
+import org.codehaus.groovy.maven.gossip.model.Source;
+
 /**
- * URL configuration source.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -56,15 +56,9 @@ public class URLSource
 
     public Configuration load() throws Exception {
         if (url == null) {
-            throw new MissingPropertyException("url");
+            throw new ConfigurationException("Missing property: url");
         }
 
         return load(url);
-    }
-
-    public String toString() {
-        return "URLSource{" +
-                "url=" + url +
-                '}';
     }
 }

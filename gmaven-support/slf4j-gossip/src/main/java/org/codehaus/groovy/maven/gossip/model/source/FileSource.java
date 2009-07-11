@@ -16,14 +16,14 @@
 
 package org.codehaus.groovy.maven.gossip.model.source;
 
-import org.codehaus.groovy.maven.gossip.config.MissingPropertyException;
+import java.io.File;
+
+import org.codehaus.groovy.maven.gossip.config.ConfigurationException;
 import org.codehaus.groovy.maven.gossip.model.Configuration;
 import org.codehaus.groovy.maven.gossip.model.Source;
 
-import java.io.File;
-
 /**
- * Local file configuration source.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -55,15 +55,9 @@ public class FileSource
 
     public Configuration load() throws Exception {
         if (file == null) {
-            throw new MissingPropertyException("file");
+            throw new ConfigurationException("Missing property: file");
         }
 
         return load(getFile());
-    }
-
-    public String toString() {
-        return "FileSource{" +
-                "file=" + file +
-                '}';
     }
 }

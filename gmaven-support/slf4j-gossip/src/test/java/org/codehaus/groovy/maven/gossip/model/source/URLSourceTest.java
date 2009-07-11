@@ -16,10 +16,11 @@
 
 package org.codehaus.groovy.maven.gossip.model.source;
 
+import java.net.URL;
+
 import junit.framework.TestCase;
 import org.codehaus.groovy.maven.gossip.model.Configuration;
-
-import java.net.URL;
+import org.codehaus.groovy.maven.gossip.model.source.URLSource;
 
 /**
  * Tests for the {@link org.codehaus.groovy.maven.gossip.model.source.URLSource} class.
@@ -39,6 +40,5 @@ public class URLSourceTest
         s.setUrl(url);
 
         Configuration c = s.load();
-        assertNotNull(c);
     }
 }

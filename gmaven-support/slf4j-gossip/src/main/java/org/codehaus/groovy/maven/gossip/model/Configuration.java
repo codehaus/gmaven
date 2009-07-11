@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Configuration node.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -89,7 +89,7 @@ public class Configuration
     public void merge(final Configuration node) {
         assert node != null;
 
-        log.trace("Merging with: {}", node);
+        log.debug("Merging with: {}", node);
         
         if (node.properties != null && !node.properties.isEmpty()) {
             mergeProperties(node.properties, properties());
@@ -109,7 +109,7 @@ public class Configuration
         assert source != null;
         assert target != null;
 
-        log.trace("Merging sources");
+        log.debug("Merging sources");
 
         target.addAll(source);
     }
@@ -118,7 +118,7 @@ public class Configuration
         assert source != null;
         assert target != null;
 
-        log.trace("Merging profiles");
+        log.debug("Merging profiles");
 
         target.addAll(source);
     }

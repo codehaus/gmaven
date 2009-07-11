@@ -91,10 +91,6 @@ public abstract class NameValueTriggerSupport
 
         String have = resolve();
 
-        if (log.isTraceEnabled()) {
-            log.trace("Checking active state; name={}, expect={}, found={}", new Object[] { name, value, have });
-        }
-
         // If not set, its not active
         if (have == null) {
             return false;
@@ -120,14 +116,5 @@ public abstract class NameValueTriggerSupport
         else {
             return want.equals(have);
         }
-    }
-
-    public String toString() {
-        return "NameValueTriggerSupport{" +
-                "name='" + name + '\'' +
-                ", value='" + value + '\'' +
-                ", trim=" + trim +
-                ", ignoreCase=" + ignoreCase +
-                '}';
     }
 }

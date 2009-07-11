@@ -16,12 +16,12 @@
 
 package org.codehaus.groovy.maven.plugin.compile;
 
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.apache.maven.shared.model.fileset.FileSet;
-
 import java.io.File;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.shared.model.fileset.FileSet;
 
 /**
  * Compiles Groovy sources.
@@ -69,6 +69,6 @@ public class CompileMojo
     }
 
     protected Set getForcedCompileSources() {
-        return compileState.getForcedCompilationSources(project);
+        return compileState.getForcedCompilationSources(true);
     }
 }

@@ -22,7 +22,7 @@ import org.codehaus.groovy.maven.gossip.Event;
 import org.codehaus.groovy.maven.gossip.Level;
 
 /**
- * Renders events with ANSI colors.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -44,13 +44,6 @@ public class ColorRenderer
         else {
             maxLength = w - 1;
         }
-    }
-
-    public String toString() {
-        return "ColorRenderer{" +
-                "truncate=" + truncate +
-                ", maxLength=" + maxLength +
-                '}';
     }
 
     public boolean isTruncate() {

@@ -16,16 +16,6 @@
 
 package org.codehaus.groovy.maven.gossip.config;
 
-import org.codehaus.groovy.maven.gossip.InternalLogger;
-import org.codehaus.groovy.maven.gossip.model.Configuration;
-import org.codehaus.groovy.maven.gossip.model.Filter;
-import org.codehaus.groovy.maven.gossip.model.Logger;
-import org.codehaus.groovy.maven.gossip.model.Profile;
-import org.codehaus.groovy.maven.gossip.model.Source;
-import org.codehaus.groovy.maven.gossip.model.Trigger;
-import org.codehaus.groovy.maven.gossip.model.render.Renderer;
-import org.codehaus.plexus.util.StringUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -36,8 +26,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.codehaus.groovy.maven.gossip.InternalLogger;
+import org.codehaus.groovy.maven.gossip.model.Configuration;
+import org.codehaus.groovy.maven.gossip.model.Filter;
+import org.codehaus.groovy.maven.gossip.model.Logger;
+import org.codehaus.groovy.maven.gossip.model.Profile;
+import org.codehaus.groovy.maven.gossip.model.Source;
+import org.codehaus.groovy.maven.gossip.model.Trigger;
+import org.codehaus.groovy.maven.gossip.model.render.Renderer;
+
 /**
- * Creates the Gossip configuration.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -63,7 +62,7 @@ public class ConfigurationFactory
     public Configuration create(final URL url) throws Exception {
         assert url != null;
 
-        log.debug("Creating configuration from: {}", url);
+        log.debug("Configuring from: {}", url);
 
         Configuration config = new Configuration();
 
@@ -82,6 +81,8 @@ public class ConfigurationFactory
 
         configureProfiles(config, ctx);
 
+        log.debug("Configuration: {}", config);
+
         return config;
     }
 
@@ -89,10 +90,10 @@ public class ConfigurationFactory
         assert config != null;
         assert ctx != null;
 
-        log.trace("Configuring sources: {}", ctx);
+        log.debug("Configuring sources: {}", ctx);
 
         if (!ctx.contains("sources")) {
-            log.trace("Missing 'sources' property; skipping");
+            log.debug("Missing 'sources' property; skipping");
             return;
         }
 
@@ -108,6 +109,8 @@ public class ConfigurationFactory
             try {
                 Source source = createSource(ctx.get("source." + name, (String)null), ctx.child("source." + name));
 
+                log.debug("Created source: {}", source);
+
                 config.addSource(source);
             }
             catch (Exception e) {
@@ -120,7 +123,7 @@ public class ConfigurationFactory
         assert className != null;
         assert ctx != null;
 
-        log.trace("Creating source: {}", className);
+        log.debug("Creating source: {}", className);
 
         Class type = loadClass(className);
 
@@ -133,8 +136,6 @@ public class ConfigurationFactory
             maybeSet(source, key, value);
         }
 
-        log.debug("Created: {}", source);
-
         return source;
     }
 
@@ -142,10 +143,10 @@ public class ConfigurationFactory
         assert config != null;
         assert ctx != null;
 
-        log.trace("Configuring profiles: {}", ctx);
+        log.debug("Configuring profiles: {}", ctx);
 
         if (!ctx.contains("profiles")) {
-            log.trace("Missing 'profiles' property; skipping");
+            log.debug("Missing 'profiles' property; skipping");
             return;
         }
 
@@ -160,6 +161,8 @@ public class ConfigurationFactory
 
             Profile profile = createProfile(name, ctx.child("profile." + name));
 
+            log.debug("Created profile: {}", profile);
+
             config.addProfile(profile);
         }
     }
@@ -168,7 +171,7 @@ public class ConfigurationFactory
         assert name != null;
         assert ctx != null;
 
-        log.trace("Creating profile: {}", name);
+        log.debug("Creating profile: {}");
 
         Profile profile = new Profile(name);
 
@@ -181,8 +184,6 @@ public class ConfigurationFactory
 
         configureFilters(profile, ctx);
 
-        log.debug("Created: {}", profile);
-
         return profile;
     }
 
@@ -190,7 +191,7 @@ public class ConfigurationFactory
         assert profile != null;
         assert ctx != null;
 
-        log.trace("Configuring loggers: {}", ctx);
+        log.debug("Configuring loggers: {}", ctx);
 
         for (Iterator iter = ctx.names().iterator(); iter.hasNext();) {
             String name = (String)iter.next();
@@ -199,7 +200,7 @@ public class ConfigurationFactory
             Logger logger = new Logger(name);
             logger.setLevel(value);
 
-            log.debug("Created: {}", logger);
+            log.debug("Created logger[{}]: {}", name, logger);
 
             profile.addLogger(logger);
         }
@@ -209,10 +210,10 @@ public class ConfigurationFactory
         assert profile != null;
         assert ctx != null;
 
-        log.trace("Configuring triggers: {}", ctx);
+        log.debug("Configuring triggers: {}", ctx);
 
         if (!ctx.contains("triggers")) {
-            log.trace("Missing 'triggers' property; skipping");
+            log.debug("Missing 'triggers' property; skipping");
             return;
         }
 
@@ -228,6 +229,8 @@ public class ConfigurationFactory
             try {
                 Trigger trigger = createTrigger(ctx.get("trigger." + name, (String)null), ctx.child("trigger." + name));
 
+                log.debug("Created trigger: {}", trigger);
+
                 profile.addTrigger(trigger);
             }
             catch (Exception e) {
@@ -240,7 +243,7 @@ public class ConfigurationFactory
         assert className != null;
         assert ctx != null;
 
-        log.trace("Creating trigger: {}", className);
+        log.debug("Creating trigger: {}", className);
 
         Class type = loadClass(className);
 
@@ -260,8 +263,6 @@ public class ConfigurationFactory
             maybeSet(trigger, key, value);
         }
 
-        log.debug("Created: {}", trigger);
-
         return trigger;
     }
 
@@ -269,10 +270,10 @@ public class ConfigurationFactory
         assert profile != null;
         assert ctx != null;
 
-        log.trace("Configuring filters: {}", ctx);
+        log.debug("Configuring filters: {}", ctx);
 
         if (!ctx.contains("filters")) {
-            log.trace("Missing 'filters' property; skipping");
+            log.debug("Missing 'filters' property; skipping");
             return;
         }
 
@@ -288,6 +289,8 @@ public class ConfigurationFactory
             try {
                 Filter filter = createFilter(ctx.get("filter." + name, (String)null), ctx.child("filter." + name));
 
+                log.debug("Created filter: {}", filter);
+
                 profile.addFilter(filter);
             }
             catch (Exception e) {
@@ -300,7 +303,7 @@ public class ConfigurationFactory
         assert className != null;
         assert ctx != null;
 
-        log.trace("Creating filter: {}", className);
+        log.debug("Creating filter: {}", className);
 
         //
         // TODO: Add support for class aliases
@@ -335,8 +338,6 @@ public class ConfigurationFactory
             maybeSet(filter, key, value);
         }
 
-        log.debug("Created: {}", filter);
-
         return filter;
     }
 
@@ -349,6 +350,8 @@ public class ConfigurationFactory
         if (className != null) {
             Renderer renderer = createRenderer(className, ctx.child("renderer"));
 
+            log.debug("Created renderer: {}", renderer);
+
             filter.setRenderer(renderer);
         }
     }
@@ -357,7 +360,7 @@ public class ConfigurationFactory
         assert className != null;
         assert ctx != null;
 
-        log.trace("Creating renderer: {}", className);
+        log.debug("Creating renderer: {}", className);
 
         Class type = loadClass(className);
 
@@ -377,8 +380,6 @@ public class ConfigurationFactory
             maybeSet(renderer, key, value);
         }
 
-        log.debug("Created: {}", renderer);
-        
         return renderer;
     }
 
@@ -401,13 +402,11 @@ public class ConfigurationFactory
             input.close();
         }
 
-        Context ctx = new Context(props);
-
         if (log.isDebugEnabled()) {
-            ctx.dump();
+            dumpProperties(props);
         }
 
-        return ctx;
+        return new Context(props);
     }
 
     private Properties createProperties(final Context ctx) {
@@ -457,12 +456,28 @@ public class ConfigurationFactory
         return type;
     }
 
+    private String capitalize(final String string) {
+        assert string != null;
+
+        int length = string.length();
+
+        if (length == 0) {
+            return string;
+        }
+        else if (length == 1) {
+            return string.toUpperCase();
+        }
+        else {
+            return (Character.toUpperCase(string.charAt(0)) + string.substring(1));
+        }
+    }
+
     private void maybeSet(final Object target, final String name, final Object value) {
         assert target != null;
         assert name != null;
         assert value != null;
 
-        String tmp = "set" + StringUtils.capitalise(name);
+        String tmp = "set" + capitalize(name);
 
         log.trace("Looking for setter: {}", tmp);
 

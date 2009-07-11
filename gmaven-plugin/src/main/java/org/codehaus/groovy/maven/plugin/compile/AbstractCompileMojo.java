@@ -16,17 +16,17 @@
 
 package org.codehaus.groovy.maven.plugin.compile;
 
-import org.apache.maven.shared.io.scan.mapping.SourceMapping;
-import org.apache.maven.shared.io.scan.mapping.SuffixMapping;
-import org.apache.maven.shared.model.fileset.FileSet;
-import org.codehaus.groovy.maven.feature.Component;
-import org.codehaus.groovy.maven.feature.Configuration;
-import org.codehaus.groovy.maven.plugin.CompilerMojoSupport;
-import org.codehaus.groovy.maven.runtime.ClassCompiler;
-
 import java.io.File;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.apache.maven.shared.io.scan.mapping.SourceMapping;
+import org.apache.maven.shared.io.scan.mapping.SuffixMapping;
+import org.apache.maven.shared.model.fileset.FileSet;
+import org.codehaus.groovy.maven.plugin.CompilerMojoSupport;
+import org.codehaus.groovy.maven.feature.Component;
+import org.codehaus.groovy.maven.feature.Configuration;
+import org.codehaus.groovy.maven.runtime.ClassCompiler;
 
 /**
  * Support for compile mojos that generate classes.
@@ -87,25 +87,7 @@ public abstract class AbstractCompileMojo
      * @noinspection UnusedDeclaration
      */
     private int tolerance;
-    
-    /**
-     * Allow setting the bytecode compatibility.
-     *
-     * @parameter expression="${targetBytecode}"
-     *
-     * @noinspection UnusedDeclaration
-     */
-    private String targetBytecode;
-    
-    /**
-     * Sets the warning level.
-     *
-     * @paramater expression="${waningLevel}" default-value="0"
-     *
-     * @noinspection UnusedDeclaration
-     */
-    private int warningLevel;
-    
+
     /**
      * Sets the name of the base class for scripts. It must be a subclass of <tt>groovy.lang.Script</tt>.
      *
@@ -142,16 +124,6 @@ public abstract class AbstractCompileMojo
         config.set(DEBUG, debug);
 
         config.set(TOLERANCE, tolerance);
-        
-        if (targetBytecode != null) {
-            config.set(TARGET_BYTECODE, targetBytecode);
-        }
-
-        config.set(WARNING_LEVEL, warningLevel);
-        
-        if (sourceEncoding != null) {
-            config.set(SOURCE_ENCODING, sourceEncoding);
-        }
 
         if (scriptBaseClassname != null) {
             config.set(SCRIPT_BASE_CLASSNAME, scriptBaseClassname);
@@ -191,7 +163,7 @@ public abstract class AbstractCompileMojo
             for (Iterator iter=forced.iterator(); iter.hasNext();) {
                 File file = (File)iter.next();
 
-                log.debug(" + {}", file);
+                log.debug(" + " + file);
 
                 compiler.add(file);
             }

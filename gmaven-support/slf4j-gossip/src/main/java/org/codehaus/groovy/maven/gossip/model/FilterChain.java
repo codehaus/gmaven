@@ -16,13 +16,13 @@
 
 package org.codehaus.groovy.maven.gossip.model;
 
-import org.codehaus.groovy.maven.gossip.Event;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.groovy.maven.gossip.Event;
+
 /**
- * Filter-chain node.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

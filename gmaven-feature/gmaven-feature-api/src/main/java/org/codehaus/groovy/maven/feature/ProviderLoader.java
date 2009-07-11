@@ -19,7 +19,7 @@ package org.codehaus.groovy.maven.feature;
 import java.util.Map;
 
 /**
- * Loads provider implementations for a specific key.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

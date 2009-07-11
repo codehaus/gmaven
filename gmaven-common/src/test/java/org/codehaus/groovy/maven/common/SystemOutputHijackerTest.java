@@ -16,10 +16,11 @@
 
 package org.codehaus.groovy.maven.common;
 
-import junit.framework.TestCase;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
+import junit.framework.TestCase;
+import org.codehaus.groovy.maven.common.SystemOutputHijacker;
 
 /**
  * Tests for the {@link SystemOutputHijacker} class.

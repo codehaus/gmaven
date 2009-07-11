@@ -16,52 +16,28 @@
 
 package org.codehaus.groovy.maven.runtime.loader;
 
-import org.codehaus.groovy.maven.feature.Provider;
-import org.codehaus.groovy.maven.feature.ProviderLoader;
-import org.codehaus.groovy.maven.feature.ProviderRegistry;
-import org.codehaus.groovy.maven.feature.ProviderSelector;
-import org.codehaus.plexus.PlexusConstants;
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.context.Context;
-import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.codehaus.groovy.maven.feature.Provider;
+import org.codehaus.groovy.maven.feature.ProviderLoader;
+import org.codehaus.groovy.maven.feature.ProviderRegistry;
+import org.codehaus.groovy.maven.feature.ProviderSelector;
+
 /**
  * Default {@link ProviderSelector}.
  *
- * @plexus.component role="org.codehaus.groovy.maven.feature.ProviderSelector"
+ * @plexus.component role="org.codehaus.groovy.maven.feature.ProviderSelector" instantiation-strategy="singleton"
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class DefaultProviderSelector
-    implements ProviderSelector, Contextualizable
+    extends LoaderSupport
+    implements ProviderSelector
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
-    private PlexusContainer container;
-
-    public void contextualize(final Context context) throws ContextException {
-        assert context != null;
-
-        container = (PlexusContainer) context.get(PlexusConstants.PLEXUS_KEY);
-    }
-
-    protected PlexusContainer getContainer() {
-        if (container == null) {
-            throw new IllegalStateException("Container not bound");
-        }
-
-        return container;
-    }
-
     public Provider select(final ProviderRegistry registry, final String selection) throws Exception {
         assert registry != null;
         assert selection != null;
@@ -233,12 +209,7 @@ public class DefaultProviderSelector
      * Find any provider loaders which are available in the container.
      */
     private Map findLoaders() {
-        Map loaders = getContainer().getComponentDescriptorMap(ProviderLoader.class.getName());
-        if (loaders == null) {
-            throw new Error("No provider loaders found");
-        }
-        
-        Set keys = loaders.keySet();
+        Set keys = getContainer().getComponentDescriptorMap(ProviderLoader.class.getName()).keySet();
 
         Map found = null;
 

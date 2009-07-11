@@ -17,7 +17,7 @@
 package org.codehaus.groovy.maven.feature;
 
 /**
- * Thrown to indicate a configuration failure.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

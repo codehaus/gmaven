@@ -19,6 +19,7 @@ package org.codehaus.groovy.maven.gossip.model.source;
 import junit.framework.TestCase;
 import org.codehaus.groovy.maven.gossip.config.ConfigurationException;
 import org.codehaus.groovy.maven.gossip.model.Configuration;
+import org.codehaus.groovy.maven.gossip.model.source.SystemPropertySource;
 
 /**
  * Tests for the {@link org.codehaus.groovy.maven.gossip.model.source.SystemPropertySource} class.
@@ -35,13 +36,8 @@ public class SystemPropertySourceTest
         s.setName(name);
 
         System.setProperty(name, "no such file anywhere I hope");
-        try {
-            s.load();
-            fail();
-        }
-        catch (ConfigurationException e) {
-            // expected
-        }
+        Configuration c = s.load();
+        assertNull(c);
     }
 
     public void test2() throws Exception {
@@ -58,7 +54,7 @@ public class SystemPropertySourceTest
     public void test3() throws Exception {
         try {
             SystemPropertySource s = new SystemPropertySource();
-            s.load();
+            Configuration c = s.load();
             fail();
         }
         catch (ConfigurationException expected) {}

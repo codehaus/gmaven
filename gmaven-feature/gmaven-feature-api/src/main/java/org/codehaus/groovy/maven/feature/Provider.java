@@ -19,7 +19,7 @@ package org.codehaus.groovy.maven.feature;
 import java.util.Collection;
 
 /**
- * A provider which provides features.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

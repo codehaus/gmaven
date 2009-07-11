@@ -24,23 +24,16 @@
     <parent>
         <groupId>org.codehaus.groovy.maven</groupId>
         <artifactId>gmaven</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.0-rc-1</version>
     </parent>
 
     <artifactId>gmaven-common</artifactId>
+  <version>1.0-rc-1 </version>
     <name>GMaven Common</name>
 
     <description>
         Common components used by the Maven plugin and Mojo support.
     </description>
-    
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
 </project>
 

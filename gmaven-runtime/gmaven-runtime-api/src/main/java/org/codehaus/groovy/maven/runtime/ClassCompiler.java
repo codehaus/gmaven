@@ -16,9 +16,9 @@
 
 package org.codehaus.groovy.maven.runtime;
 
-import org.codehaus.groovy.maven.feature.Component;
-
 import java.net.URL;
+
+import org.codehaus.groovy.maven.feature.Component;
 
 /**
  * Groovy class compiler abstraction.
@@ -44,25 +44,19 @@ public interface ClassCompiler
         String SOURCE_ENCODING = "sourceEncoding";
 
         String TOLERANCE = "tolerance";
-        
-        String TARGET_BYTECODE = "targetBytecode";
 
         String SCRIPT_BASE_CLASSNAME = "scriptBaseClassname";
 
         String DEFAULT_SCRIPT_EXTENSION = "defaultScriptExtension";
-        
-        String WARNING_LEVEL = "warningLevel";
 
         String[] ALL = {
             DEBUG,
             VERBOSE,
             DEBUG,
             SOURCE_ENCODING,
-            TARGET_BYTECODE,
             TOLERANCE,
             SCRIPT_BASE_CLASSNAME,
             DEFAULT_SCRIPT_EXTENSION,
-            WARNING_LEVEL,
         };
     }
 }

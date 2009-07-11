@@ -24,11 +24,12 @@
     <parent>
         <groupId>org.codehaus.groovy.maven</groupId>
         <artifactId>gmaven</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.0-rc-1</version>
     </parent>
     
     <groupId>org.codehaus.groovy.maven.support</groupId>
     <artifactId>gmaven-support</artifactId>
+  <version>1.0-rc-1 </version>
     <name>GMaven Support</name>
     <packaging>pom</packaging>
 
@@ -37,6 +38,7 @@
     </description>
     
     <modules>
+        <module>ant-1.7.0</module>
         <module>slf4j-gossip</module>
     </modules>
 

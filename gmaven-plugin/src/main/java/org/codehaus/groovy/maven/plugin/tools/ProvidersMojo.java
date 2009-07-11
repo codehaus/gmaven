@@ -16,18 +16,18 @@
 
 package org.codehaus.groovy.maven.plugin.tools;
 
-import org.codehaus.groovy.maven.feature.Feature;
-import org.codehaus.groovy.maven.feature.Provider;
-import org.codehaus.groovy.maven.feature.ProviderManager;
-import org.codehaus.groovy.maven.feature.ProviderRegistry;
-import org.codehaus.groovy.maven.feature.ProviderSelector;
-import org.codehaus.groovy.maven.plugin.ProviderMojoSupport;
-
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.codehaus.groovy.maven.plugin.ProviderMojoSupport;
+import org.codehaus.groovy.maven.feature.Feature;
+import org.codehaus.groovy.maven.feature.Provider;
+import org.codehaus.groovy.maven.feature.ProviderManager;
+import org.codehaus.groovy.maven.feature.ProviderRegistry;
+import org.codehaus.groovy.maven.feature.ProviderSelector;
 
 /**
  * Displays information about the Groovy runtime providers which are configured and selected.
@@ -43,9 +43,7 @@ public class ProvidersMojo
     extends ProviderMojoSupport
 {
     protected void doExecute() throws Exception {
-        if (log.isTraceEnabled()) {
-            logEnvironment();
-        }
+        // logEnvironment();
 
         ProviderManager manager = getProviderManager();
         log.debug("Provider manager: {}", manager);
@@ -107,18 +105,18 @@ public class ProvidersMojo
     }
 
     protected void logEnvironment() {
-        log.trace("ClassLoader '{}' Class-Path:", getClass().getClassLoader());
-
         URL[] urls = ((URLClassLoader)getClass().getClassLoader()).getURLs();
-        
+
+        log.debug("ClassLoader Class-Path:");
+
         for (int i=0; i<urls.length; i++) {
-            log.trace("    {}", urls[i]);
+            log.debug("    {}", urls[i]);
         }
 
         log.debug("Plugin Artifacts:");
 
         for (Iterator iter = pluginArtifactMap.keySet().iterator(); iter.hasNext();) {
-            log.trace("    {}", iter.next());
+            log.debug("    {}", iter.next());
         }
     }
 

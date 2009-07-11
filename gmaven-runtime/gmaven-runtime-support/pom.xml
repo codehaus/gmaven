@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.codehaus.groovy.maven.runtime</groupId>
         <artifactId>gmaven-runtime</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.0-rc-1 </version>
     </parent>
 
     <name>GMaven Runtime :: Support</name>
@@ -56,19 +56,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-utils</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.thoughtworks.qdox</groupId>
             <artifactId>qdox</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

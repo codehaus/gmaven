@@ -16,15 +16,15 @@
 
 package org.codehaus.groovy.maven.gossip;
 
-import org.codehaus.groovy.maven.gossip.config.Configurator;
-import org.codehaus.groovy.maven.gossip.model.EffectiveProfile;
-import org.slf4j.ILoggerFactory;
-import org.slf4j.Logger;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.codehaus.groovy.maven.gossip.config.Configurator;
+import org.codehaus.groovy.maven.gossip.model.EffectiveProfile;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
 
 /**
  * Factory to produce {@link Logger} instances.

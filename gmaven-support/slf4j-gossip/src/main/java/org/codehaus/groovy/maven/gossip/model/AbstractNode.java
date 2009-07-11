@@ -16,13 +16,13 @@
 
 package org.codehaus.groovy.maven.gossip.model;
 
-import org.codehaus.groovy.maven.gossip.InternalLogger;
-
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.codehaus.groovy.maven.gossip.InternalLogger;
+
 /**
- * Support for {@link Node} implementations.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

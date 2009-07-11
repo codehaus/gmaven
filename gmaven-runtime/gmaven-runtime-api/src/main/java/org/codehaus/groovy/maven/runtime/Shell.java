@@ -29,7 +29,11 @@ public interface Shell
 {
     String KEY = Shell.class.getName();
 
-    void execute(ClassLoader classLoader) throws Exception;
+    void execute() throws Exception;
+
+    //
+    // TODO: See if we can find a better name for this puppy
+    //
     
     interface Keys
     {

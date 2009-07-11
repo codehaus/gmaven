@@ -16,6 +16,12 @@
 
 package org.codehaus.groovy.maven.feature.support;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.codehaus.groovy.maven.feature.Configuration;
 import org.codehaus.groovy.maven.feature.Feature;
 import org.codehaus.groovy.maven.feature.FeatureException;
@@ -24,12 +30,6 @@ import org.codehaus.groovy.maven.feature.ProviderException;
 import org.codehaus.groovy.maven.feature.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Provides support for {@link Provider} implementations.

@@ -16,23 +16,16 @@
 
 package org.codehaus.groovy.maven.plugin.tools;
 
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.codehaus.groovy.maven.plugin.ComponentMojoSupport;
 import org.codehaus.groovy.maven.feature.Component;
 import org.codehaus.groovy.maven.feature.Configuration;
-import org.codehaus.groovy.maven.plugin.ComponentMojoSupport;
 import org.codehaus.groovy.maven.runtime.Shell;
-import org.codehaus.groovy.maven.runtime.loader.realm.RealmManager;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-
-import java.net.URLClassLoader;
-import java.util.List;
 
 /**
  * Launches the Groovy Shell (aka. <tt>groovysh</tt>).
  *
  * @goal shell
  * @requiresProject false
- * @requiresDependencyResolution test
  * @since 1.0-beta-2
  * 
  * @version $Id$
@@ -41,6 +34,10 @@ import java.util.List;
 public class ShellMojo
     extends ComponentMojoSupport
 {
+    public ShellMojo() {
+        super(Shell.KEY);
+    }
+
     /**
      * Enable the <em>legacy</em> shell.
      *
@@ -105,21 +102,6 @@ public class ShellMojo
      */
     private String args;
 
-    /**
-     * @component
-     *
-     * @noinspection UnusedDeclaration
-     */
-    private RealmManager realmManager;
-
-    public ShellMojo() {
-        super(Shell.KEY);
-    }
-
-    protected List getProjectClasspathElements() throws DependencyResolutionRequiredException {
-        return project.getTestClasspathElements();
-    }
-    
     protected void configure(final Configuration config) throws Exception {
         assert config != null;
 
@@ -139,11 +121,7 @@ public class ShellMojo
         assert component != null;
 
         Shell shell = (Shell) component;
-
-        ClassRealm realm = realmManager.createComponentRealm(provider(), createClassPath());
-
-        shell.execute(realm);
-
-        realmManager.releaseComponentRealm(realm);
+        
+        shell.execute();
     }
 }

@@ -19,6 +19,7 @@ package org.codehaus.groovy.maven.gossip;
 import junit.framework.TestCase;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
+import org.codehaus.groovy.maven.gossip.Gossip;
 
 /**
  * Tests for the {@link org.codehaus.groovy.maven.gossip.Gossip} class.
@@ -38,10 +39,10 @@ public class GossipTest
         org.slf4j.Logger log = LoggerFactory.getLogger(getClass());
         assertNotNull(log);
 
-        log.trace("trace");
-        log.debug("debug");
-        log.info("info");
-        log.warn("warn");
-        log.error("error");
+        log.trace("a");
+        log.debug("b");
+        log.info("c");
+        log.warn("d");
+        log.error("e");
     }
 }

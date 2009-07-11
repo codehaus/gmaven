@@ -16,13 +16,13 @@
 
 package org.codehaus.groovy.maven.gossip.model;
 
-import org.codehaus.groovy.maven.gossip.config.ConfigurationFactory;
-
 import java.io.File;
 import java.net.URL;
 
+import org.codehaus.groovy.maven.gossip.config.ConfigurationFactory;
+
 /**
- * Source node.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -50,17 +50,17 @@ public abstract class Source
     protected Configuration load(final URL url) throws Exception {
         assert url != null;
 
-        log.trace("Loading configuration from: {}", url);
+        log.debug("Loading: {}", url);
 
         ConfigurationFactory factory = new ConfigurationFactory();
 
         Configuration config = factory.create(url);
 
         if (config == null) {
-            log.warn("Unable to load configuration: {}", url);
+            log.debug("Unable to load configuration: {}", url);
         }
         else {
-            log.trace("Loaded configuration: {}", config);
+            log.debug("Configuration: {}", config);
         }
 
         return config;
@@ -69,7 +69,7 @@ public abstract class Source
     protected Configuration load(final File file) throws Exception {
         assert file != null;
 
-        log.trace("Loading: {}", file);
+        log.debug("Loading: {}", file);
 
         if (!file.exists()) {
             log.debug("File does not exist; skipping: {}", file);

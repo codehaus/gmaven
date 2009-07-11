@@ -21,6 +21,8 @@ import junit.framework.TestCase;
 
 import java.net.URL;
 
+import org.codehaus.groovy.maven.runtime.support.stubgen.parser.SourceType;
+
 /**
  * Tests for the {@link org.codehaus.groovy.maven.runtime.support.stubgen.parser.SourceType} class.
  *
