@@ -21,7 +21,7 @@ import org.codehaus.groovy.maven.gossip.model.render.Renderer;
 import org.codehaus.groovy.maven.gossip.model.render.SimpleRenderer;
 
 /**
- * Filter node.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

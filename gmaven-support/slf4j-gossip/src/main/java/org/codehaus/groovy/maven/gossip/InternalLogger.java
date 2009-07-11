@@ -16,12 +16,10 @@
 
 package org.codehaus.groovy.maven.gossip;
 
-import org.codehaus.plexus.util.StringUtils;
-
 import java.io.PrintStream;
 
 /**
- * Provides internal logging support for Gossip.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -31,30 +29,11 @@ public final class InternalLogger
 {
     private static Level level = Level.WARN;
 
-    private static int nameWidth = -1;
-
-    //
-    // TODO: Should probably just re-use the SimpleRenderer to get basic formatting muck
-    //
-    
     static {
-        String tmp;
-
-        tmp = System.getProperty(InternalLogger.class.getName() + ".level");
+        String tmp = System.getProperty(InternalLogger.class.getName() + ".level");
 
         if (tmp != null) {
             level = Level.forLabel(tmp);
-        }
-
-        tmp = System.getProperty(InternalLogger.class.getName() + ".nameWidth");
-
-        if (tmp != null) {
-            try {
-                nameWidth = Integer.parseInt(tmp);
-            }
-            catch (NumberFormatException e) {
-                throw new Error("Invalid InternalLogger.nameWidth value: " + tmp, e);
-            }
         }
     }
     
@@ -83,7 +62,7 @@ public final class InternalLogger
     protected void doLog(final Level level, final String message, final Throwable cause) {
         assert message != null;
         // cause may be null
-        // level should have been checked already
+        // level should have checked already
 
         final PrintStream out = System.out;
 
@@ -98,12 +77,8 @@ public final class InternalLogger
                     out.print(" ");
             }
 
-            if (nameWidth > 0) {
-                out.print(StringUtils.right(getName(), nameWidth));
-            }
-            else {
-                out.print(getName());
-            }
+            // out.print(" INTERNAL.");
+            out.print(this.getName());
             out.print(" - ");
 
             out.println(message);

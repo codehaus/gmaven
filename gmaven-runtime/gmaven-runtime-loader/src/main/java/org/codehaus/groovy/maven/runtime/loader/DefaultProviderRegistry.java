@@ -16,28 +16,25 @@
 
 package org.codehaus.groovy.maven.runtime.loader;
 
-import org.codehaus.groovy.maven.feature.Provider;
-import org.codehaus.groovy.maven.feature.ProviderRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.codehaus.groovy.maven.feature.Provider;
+import org.codehaus.groovy.maven.feature.ProviderRegistry;
+
 /**
  * Default {@link ProviderRegistry}.
  *
- * @plexus.component role="org.codehaus.groovy.maven.feature.ProviderRegistry"
+ * @plexus.component role="org.codehaus.groovy.maven.feature.ProviderRegistry" instantiation-strategy="singleton"
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class DefaultProviderRegistry
+    extends LoaderSupport
     implements ProviderRegistry
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-    
     private final Map providers = new HashMap();
 
     public Map providers() {

@@ -16,14 +16,14 @@
 
 package org.codehaus.groovy.maven.gossip.model.source;
 
-import org.codehaus.groovy.maven.gossip.config.MissingPropertyException;
+import java.io.File;
+
+import org.codehaus.groovy.maven.gossip.config.ConfigurationException;
 import org.codehaus.groovy.maven.gossip.model.Configuration;
 import org.codehaus.groovy.maven.gossip.model.Source;
 
-import java.io.File;
-
 /**
- * Home-directory configuration source.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -49,7 +49,7 @@ public class HomeDirectorySource
 
     public Configuration load() throws Exception {
         if (path == null) {
-            throw new MissingPropertyException("path");
+            throw new ConfigurationException("Missing property: path");
         }
 
         File homeDir = new File(System.getProperty("user.home"));
@@ -57,11 +57,5 @@ public class HomeDirectorySource
         File file = new File(homeDir, getPath());
 
         return load(file);
-    }
-
-    public String toString() {
-        return "HomeDirectorySource{" +
-                "path='" + path + '\'' +
-                '}';
     }
 }

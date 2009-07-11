@@ -16,17 +16,16 @@
 
 package org.codehaus.groovy.maven.gossip.model.source;
 
-import org.codehaus.groovy.maven.gossip.config.ConfigurationException;
-import org.codehaus.groovy.maven.gossip.config.MissingPropertyException;
-import org.codehaus.groovy.maven.gossip.model.Configuration;
-import org.codehaus.groovy.maven.gossip.model.Source;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.codehaus.groovy.maven.gossip.config.ConfigurationException;
+import org.codehaus.groovy.maven.gossip.model.Configuration;
+import org.codehaus.groovy.maven.gossip.model.Source;
+
 /**
- * System-property configuration source.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -52,13 +51,13 @@ public class SystemPropertySource
 
     public Configuration load() throws Exception {
         if (name == null) {
-            throw new MissingPropertyException("name");
+            throw new ConfigurationException("Missing property: name");
         }
 
         String value = System.getProperty(name);
 
         if (value == null) {
-            log.trace("Unable to load; property not set: {}", name);
+            log.debug("Unable to load; property not set: {}", name);
             return null;
         }
 
@@ -78,15 +77,10 @@ public class SystemPropertySource
         }
 
         if (url == null) {
-            throw new ConfigurationException("Unable to load; unable to resolve target: " + value);
+            log.debug("Unable to load; unable to resolve target: {}", value);
+            return null;
         }
 
         return load(url);
-    }
-
-    public String toString() {
-        return "SystemPropertySource{" +
-                "name='" + name + '\'' +
-                '}';
     }
 }

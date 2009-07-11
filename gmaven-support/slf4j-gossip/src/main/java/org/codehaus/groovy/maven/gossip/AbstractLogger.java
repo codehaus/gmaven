@@ -21,7 +21,7 @@ import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
 
 /**
- * Support for the Gossip {@link org.slf4j.Logger} implementation.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

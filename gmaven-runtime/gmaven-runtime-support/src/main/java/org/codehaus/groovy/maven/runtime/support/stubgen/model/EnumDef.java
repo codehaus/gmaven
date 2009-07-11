@@ -16,11 +16,8 @@
 
 package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 /**
- * Representation of an enum definition.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -28,25 +25,7 @@ import java.util.Set;
 public class EnumDef
     extends ClassDef
 {
-    private final Set/*<EnumConstantDef*/ constants = new LinkedHashSet();
-
     public EnumDef() {
         super(Type.ENUM);
-    }
-
-    public void addConstant(final EnumConstantDef constant) {
-        assert constant != null;
-
-        constants.add(constant);
-    }
-
-    public void addConstant(final String constant) {
-        assert constant != null;
-
-        addConstant(new EnumConstantDef(constant));
-    }
-
-    public Set getConstants() {
-        return constants;
     }
 }

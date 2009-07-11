@@ -16,9 +16,9 @@
 
 package org.codehaus.groovy.maven.runtime;
 
-import org.codehaus.groovy.maven.feature.Component;
-
 import java.net.URL;
+
+import org.codehaus.groovy.maven.feature.Component;
 
 /**
  * Groovy class compiler abstraction.

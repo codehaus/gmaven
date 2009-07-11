@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.codehaus.groovy.maven.runtime</groupId>
         <artifactId>gmaven-runtime</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.0-rc-2</version>
     </parent>
 
     <name>GMaven Runtime :: 1.5</name>
@@ -53,15 +53,32 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all-minimal</artifactId>
-            <version>1.5.7</version>
+            <version>1.5.6</version>
         </dependency>
-
+        
+        <!--
+        NOTE: Include our patched version of Ant Launcher 1.7.0 to get around
+              evil URI creation problems when file paths contain spaces, until
+              Ant 1.7.1 is released to the wild.
+        -->
+        
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
-            <version>1.7.1</version>
+            <version>1.7.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.ant</groupId>
+                    <artifactId>ant-launcher</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
+        <dependency>
+            <groupId>org.codehaus.groovy.maven.support</groupId>
+            <artifactId>ant-launcher-1.7.0</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>jline</groupId>
             <artifactId>jline</artifactId>

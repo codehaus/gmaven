@@ -16,8 +16,8 @@
 
 package org.codehaus.groovy.maven.plugin.execute;
 
-import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
+import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
 
 /**
  * Container for <tt>groovy:execute</tt> source configuration.

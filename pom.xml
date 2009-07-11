@@ -4,7 +4,7 @@
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+    You may obtain a copy of the License atshitty
 
         http://www.apache.org/licenses/LICENSE-2.0
 
@@ -26,7 +26,7 @@
     <name>GMaven</name>
     <packaging>pom</packaging>
 
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0-rc-2</version>
     
     <description>
         GMaven provides integration of the Groovy language into Maven.
@@ -97,9 +97,9 @@
     </pluginRepositories>
 
     <scm>
-        <connection>scm:svn:https://svn.codehaus.org/groovy/gmaven/trunk</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/groovy/gmaven/trunk</developerConnection>
-        <url>http://fisheye.codehaus.org/browse/groovy/gmaven/trunk</url>
+        <connection>scm:svn:https://svn.codehaus.org/groovy/gmaven/tags/gmaven-1.0-rc-2</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/groovy/gmaven/tags/gmaven-1.0-rc-2</developerConnection>
+        <url>http://fisheye.codehaus.org/browse/groovy/gmaven/tags/gmaven-1.0-rc-2</url>
     </scm>
 
     <issueManagement>
@@ -151,15 +151,6 @@
         </developer>
 
         <developer>
-            <id>jasonsmith</id>
-            <name>Jason Smith</name>
-            <email>jsmith@infotrustgroup.com</email>
-            <roles>
-                <role>Developer</role>
-            </roles>
-        </developer>
-        
-        <developer>
             <id>jgenender</id>
             <name>Jeff Genender</name>
             <email>jgenender@codehaus.org</email>
@@ -185,37 +176,34 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.5.6</version>
+                <version>1.5.0</version>
             </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
-                <version>1.5.6</version>
+                <version>1.5.0</version>
             </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-nop</artifactId>
-                <version>1.5.6</version>
+                <version>1.5.0</version>
             </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jcl104-over-slf4j</artifactId>
-                <version>1.5.6</version>
+                <version>1.5.0</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.codehaus.plexus</groupId>
-                <artifactId>plexus-classworlds</artifactId>
-                <version>1.2-alpha-13</version>
-            </dependency>
-
+            
+            <!--
+            NOTE: 1.0-alpha-9 is the version of the container used by Maven 2.0.5.
+            -->
             <dependency>
                 <groupId>org.codehaus.plexus</groupId>
                 <artifactId>plexus-container-default</artifactId>
-                <version>1.0-alpha-9-stable-1</version>
+                <version>1.0-alpha-9</version>
                 <exclusions>
                     <exclusion>
                         <groupId>junit</groupId>
@@ -225,39 +213,33 @@
             </dependency>
 
             <dependency>
-                <groupId>org.codehaus.plexus</groupId>
-                <artifactId>plexus-utils</artifactId>
-                <version>1.5.5</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-core</artifactId>
-                <version>2.0.9</version>
+                <version>2.0.5</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-project</artifactId>
-                <version>2.0.9</version>
+                <version>2.0.5</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-artifact</artifactId>
-                <version>2.0.9</version>
+                <version>2.0.5</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-plugin-api</artifactId>
-                <version>2.0.9</version>
+                <version>2.0.5</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-plugin-descriptor</artifactId>
-                <version>2.0.9</version>
+                <version>2.0.5</version>
             </dependency>
 
             <dependency>
@@ -267,9 +249,21 @@
             </dependency>
 
             <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-tools-api</artifactId>
+                <version>2.4.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-tools-java</artifactId>
+                <version>2.4.1</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.maven.shared</groupId>
                 <artifactId>file-management</artifactId>
-                <version>1.2.1</version>
+                <version>1.1</version>
             </dependency>
 
             <dependency>
@@ -281,7 +275,7 @@
             <dependency>
                 <groupId>com.thoughtworks.qdox</groupId>
                 <artifactId>qdox</artifactId>
-                <version>1.8</version>
+                <version>1.6.3</version>
                 <!--
                 NOTE: Don't include any of the dependencies, they are incorrectly scoped.
                 -->
@@ -300,11 +294,11 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            
+
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
-                <version>2.4</version>
+                <version>2.3</version>
             </dependency>
 
             <dependency>
@@ -318,85 +312,91 @@
             <dependency>
                 <groupId>org.codehaus.groovy.maven.feature</groupId>
                 <artifactId>gmaven-feature-api</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.0-rc-2</version>
             </dependency>
 
             <dependency>
                 <groupId>org.codehaus.groovy.maven.feature</groupId>
                 <artifactId>gmaven-feature-support</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.0-rc-2</version>
             </dependency>
 
             <dependency>
                 <groupId>org.codehaus.groovy.maven.runtime</groupId>
                 <artifactId>gmaven-runtime-api</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.0-rc-2</version>
             </dependency>
 
             <dependency>
                 <groupId>org.codehaus.groovy.maven.runtime</groupId>
                 <artifactId>gmaven-runtime-support</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.0-rc-2</version>
             </dependency>
 
             <dependency>
                 <groupId>org.codehaus.groovy.maven.runtime</groupId>
                 <artifactId>gmaven-runtime-loader</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.0-rc-2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.groovy.maven.runtime</groupId>
+                <artifactId>gmaven-runtime-default</artifactId>
+                <version>1.0-rc-2</version>
             </dependency>
 
             <dependency>
                 <groupId>org.codehaus.groovy.maven.runtime</groupId>
                 <artifactId>gmaven-runtime-1.0</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.0-rc-2</version>
             </dependency>
 
             <dependency>
                 <groupId>org.codehaus.groovy.maven.runtime</groupId>
                 <artifactId>gmaven-runtime-1.5</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.0-rc-2</version>
             </dependency>
 
             <dependency>
-                <groupId>org.codehaus.groovy.maven.runtime</groupId>
-                <artifactId>gmaven-runtime-1.6</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <groupId>org.codehaus.groovy.maven.support</groupId>
+                <artifactId>ant-launcher-1.7.0</artifactId>
+                <version>1.0-rc-2</version>
             </dependency>
 
             <dependency>
                 <groupId>org.codehaus.groovy.maven.support</groupId>
                 <artifactId>slf4j-gossip</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.0-rc-2</version>
             </dependency>
 
             <dependency>
                 <groupId>org.codehaus.groovy.maven</groupId>
                 <artifactId>gmaven-common</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.0-rc-2</version>
             </dependency>
 
             <dependency>
                 <groupId>org.codehaus.groovy.maven</groupId>
                 <artifactId>gmaven-mojo</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.0-rc-2</version>
             </dependency>
 
             <dependency>
                 <groupId>org.codehaus.groovy.maven</groupId>
                 <artifactId>gmaven-mojo-support</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.0-rc-2</version>
             </dependency>
 
             <dependency>
                 <groupId>org.codehaus.groovy.maven</groupId>
                 <artifactId>gmaven-plugin</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.0-rc-2</version>
             </dependency>
             
             <dependency>
                 <groupId>org.codehaus.groovy.maven</groupId>
                 <artifactId>gmaven-packaging</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.0-rc-2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -415,11 +415,7 @@
         <module>gmaven-examples</module>
         <module>gmaven-testsuite</module>
     </modules>
-    
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-    
+
     <build>
         <extensions>
             <extension>
@@ -430,59 +426,19 @@
         </extensions>
 
         <defaultGoal>install</defaultGoal>
-        
-        <resources>
-            <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-                <filtering>false</filtering>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-            
-            <!--
-            <resource>
-                <directory>${project.basedir}/src/main/filtered-resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-            -->
-        </resources>
-        
-        <testResources>
-            <testResource>
-                <directory>${project.basedir}/src/test/resources</directory>
-                <filtering>false</filtering>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </testResource>
-            
-            <!--
-            <testResource>
-                <directory>${project.basedir}/src/test/filtered-resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </testResource>
-            -->
-        </testResources>
-        
+
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>1.0-beta-1</version>
+                    <version>1.0-alpha-3</version>
                 </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.3</version>
+                    <version>2.1.1</version>
                 </plugin>
 
                 <plugin>
@@ -494,7 +450,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.3</version>
+                    <version>2.2</version>
                 </plugin>
 
                 <plugin>
@@ -518,7 +474,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.4.3</version>
+                    <version>2.4.2</version>
                     <configuration>
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     </configuration>
@@ -533,7 +489,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.1</version>
+                    <version>2.0</version>
                 </plugin>
                 
                 <plugin>
@@ -545,25 +501,25 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.4</version>
+                    <version>2.3</version>
                 </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-plugin-plugin</artifactId>
-                    <version>2.5</version>
+                    <version>2.4.1</version>
                 </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.3</version>
+                    <version>1.1</version>
                 </plugin>
                 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>1.2</version>
+                    <version>1.0.1</version>
                 </plugin>
                 
                 <plugin>
@@ -593,10 +549,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>2.0-beta-8</version>
-                    <configuration>
-                        <tagBase>https://svn.codehaus.org/groovy/gmaven/tags</tagBase>
-                    </configuration>
+                    <version>2.0-beta-6</version>
                 </plugin>
                 
                 <plugin>
@@ -611,25 +564,36 @@
                     <version>2.0.4</version>
                 </plugin>
                 
+                <!--
+                FIXME: Having major problems with maven-site-plugin 2.0-beta-6, renders bunk links, so stick with 2.0-beta-5 for now.
+                -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.5</version>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>2.0-beta-5</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-idea-plugin</artifactId>
+                    <version>2.1</version>
                     <configuration>
-                        <source>1.4</source>
+                        <jdkName>1.4</jdkName>
+                        <jdkLevel>1.4</jdkLevel>
+                        <linkModules>true</linkModules>
                     </configuration>
                 </plugin>
                 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>2.0-beta-7</version>
+                    <artifactId>maven-eclipse-plugin</artifactId>
+                    <version>2.5.1</version>
                 </plugin>
                 
                 <plugin>
                     <groupId>org.codehaus.plexus</groupId>
                     <artifactId>plexus-maven-plugin</artifactId>
-                    <version>1.3.8</version>
+                    <version>1.3.5</version>
                 </plugin>
                 
                 <plugin>
@@ -647,7 +611,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>shitty-maven-plugin</artifactId>
-                    <version>1.0-alpha-3</version>
+                    <version>1.0-alpha-2</version>
                 </plugin>
                 
                 <!-- INTERNAL -->
@@ -655,7 +619,7 @@
                 <plugin>
                     <groupId>org.codehaus.groovy.maven</groupId>
                     <artifactId>gmaven-plugin</artifactId>
-                    <version>1.1-SNAPSHOT</version>
+                    <version>1.0-rc-2</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -678,17 +642,11 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>[1.4,1.7)</version>
+                                    <version>[1.4,1.6)</version>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
-                                    <version>[2.0.9,)</version>
+                                    <version>[2.0.5,)</version>
                                 </requireMavenVersion>
-                                <requirePluginVersions>
-                                    <banLatest>true</banLatest>
-                                    <banRelease>true</banRelease>
-                                    <banSnapshots>false</banSnapshots>
-                                    <banTimestamps>false</banTimestamps>
-                                </requirePluginVersions>
                             </rules>
                         </configuration>
                     </execution>
@@ -703,6 +661,18 @@
                     <target>1.4</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -711,13 +681,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.1</version>
+                <version>2.0.1</version>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>2.4.2</version>
             </plugin>
             
             <!--
@@ -756,7 +726,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.5</version>
+                <version>2.4</version>
                 <configuration>
                     <quiet>true</quiet>
                     <links>
@@ -816,18 +786,76 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>2.5</version>
+                <version>2.4.1</version>
             </plugin>
         </plugins>
     </reporting>
 
     <profiles>
         <profile>
-            <id>integration-tests</id>
+            <id>idea</id>
+
+            <build>
+                <defaultGoal>validate</defaultGoal>
+
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-idea-plugin</artifactId>
+                        <configuration>
+                            <overwrite>true</overwrite>
+                            <downloadSources>true</downloadSources>
+                            <downloadJavadocs>true</downloadJavadocs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                    <goal>idea</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>eclipse</id>
+
+            <build>
+                <defaultGoal>validate</defaultGoal>
+
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-eclipse-plugin</artifactId>
+                        <configuration>
+                            <downloadSources>true</downloadSources>
+                            <downloadJavadocs>true</downloadJavadocs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                    <goal>eclipse</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>super-helpful-integration-tests</id>
 
             <activation>
                 <property>
-                    <name>it</name>
+                    <name>shit</name>
+                    <value>true</value>
                 </property>
             </activation>
 
@@ -851,141 +879,23 @@
         </profile>
         
         <profile>
-            <id>automated-builds</id>
-            
-            <activation>
-                <property>
-                    <name>autobuild</name>
-                </property>
-            </activation>
-            
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>shitty-maven-plugin</artifactId>
-                        <configuration>
-                            <verbose>true</verbose>
-                            <color>false</color>
-                        </configuration>
-                    </plugin>
-                    
-                    <!--
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>clean</goal>
-                                    <goal>cobertura</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    -->
-                </plugins>
-            </build>
-        </profile>
-        
-        <profile>
             <id>release</id>
 
-            <activation>
-                <property>
-                    <name>release</name>
-                </property>
-            </activation>
-            
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-release-plugin</artifactId>
                         <configuration>
-                            <autoVersionSubmodules>true</autoVersionSubmodules>
-                            <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
                             <useReleaseProfile>false</useReleaseProfile>
-                            <arguments>-Drelease</arguments>
-                            <preparationGoals>clean install -Dit</preparationGoals>
                             <goals>deploy</goals>
-                        </configuration>
-                    </plugin>
-                    
-                    <!--
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                                <configuration>
-                                    <passphrase>${release.gpgPassphrase}</passphrase>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    -->
-                    
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <configuration>
-                            <updateReleaseInfo>true</updateReleaseInfo>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        
-        <profile>
-            <id>release-stage</id>
-            <activation>
-                <property>
-                    <name>release</name>
-                    <value>stage</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <configuration>
-                            <arguments>-Drelease=stage</arguments>
+                            <arguments>-Prelease</arguments>
+                            <!--
+                            <preparationGoals>clean verify -Dshit</preparationGoals>
+                            -->
                         </configuration>
                     </plugin>
 
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <configuration>
-                            <altDeploymentRepository>stage-deploy::default::${release.stageDeployUrl}</altDeploymentRepository>
-                        </configuration>
-                    </plugin>
-                    
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-site-plugin</artifactId>
-                        <configuration>
-                            <stagingSiteURL>${release.siteStageDeployUrl}</stagingSiteURL>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>distribution</id>
-            <activation>
-                <property>
-                    <name>release</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
@@ -998,13 +908,42 @@
                         </executions>
                     </plugin>
 
+                    <!--
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <configuration>
+                            <passphrase>${gpg.passphrase}</passphrase>
+                        </configuration>
                         <executions>
                             <execution>
                                 <goals>
-                                    <goal>javadoc</goal>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    -->
+                    
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <configuration>
+                            <altDeploymentRepository>${deploy.altRepository}</altDeploymentRepository>
+                            <updateReleaseInfo>true</updateReleaseInfo>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <source>1.4</source>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
                                     <goal>jar</goal>
                                 </goals>
                             </execution>
@@ -1013,67 +952,30 @@
                 </plugins>
             </build>
         </profile>
-
-        <profile>
-            <id>test-distribution</id>
-            <activation>
-                <property>
-                    <name>testDistributionUrl</name>
-                </property>
-            </activation>
-            <distributionManagement>
-                <repository>
-                    <id>test-repository</id>
-                    <url>${testDistributionUrl}/releases</url>
-                </repository>
-                <snapshotRepository>
-                    <id>test-snapshot-repository</id>
-                    <url>${testDistributionUrl}/snapshots</url>
-                </snapshotRepository>
-                <site>
-                    <id>test-site</id>
-                    <url>${testDistributionUrl}/site</url>
-                </site>
-            </distributionManagement>
-        </profile>
         
         <profile>
-            <id>strict-enforcement</id>
+            <id>stage-distribution</id>
+
             <activation>
                 <property>
-                    <name>enforce</name>
-                    <value>strict</value>
+                    <name>stage.distributionUrl</name>
                 </property>
             </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <requirePluginVersions>
-                                            <banLatest>true</banLatest>
-                                            <banRelease>true</banRelease>
-                                            <banSnapshots>true</banSnapshots>
-                                            <banTimestamps>true</banTimestamps>
-                                        </requirePluginVersions>
-                                        <requireReleaseDeps>
-                                            <searchTransitive>true</searchTransitive>
-                                        </requireReleaseDeps>
-                                    </rules>
-                                    <fail>true</fail>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
+
+            <distributionManagement>
+                <repository>
+                    <id>stage-repository</id>
+                    <url>${stage.distributionUrl}/repository</url>
+                </repository>
+                <snapshotRepository>
+                    <id>stage-snapshot-repository</id>
+                    <url>${stage.distributionUrl}/snapshot-repository</url>
+                </snapshotRepository>
+                <site>
+                    <id>stage-site</id>
+                    <url>${stage.distributionUrl}/site</url>
+                </site>
+            </distributionManagement>
         </profile>
     </profiles>
 

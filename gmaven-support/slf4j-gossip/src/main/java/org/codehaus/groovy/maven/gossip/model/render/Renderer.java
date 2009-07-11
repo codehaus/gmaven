@@ -20,7 +20,7 @@ import org.codehaus.groovy.maven.gossip.Event;
 import org.codehaus.groovy.maven.gossip.model.AbstractNode;
 
 /**
- * Support for renderer implementations.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

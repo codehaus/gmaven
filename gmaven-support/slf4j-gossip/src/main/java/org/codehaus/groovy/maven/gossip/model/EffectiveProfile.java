@@ -16,16 +16,16 @@
 
 package org.codehaus.groovy.maven.gossip.model;
 
-import org.codehaus.groovy.maven.gossip.Event;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.groovy.maven.gossip.Event;
+
 /**
- * Effective profile node.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

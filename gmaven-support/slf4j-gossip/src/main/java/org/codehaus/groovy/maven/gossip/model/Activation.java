@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Activation node.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -49,23 +49,28 @@ public class Activation
     public boolean isActive() {
         // No triggers means its not active
         if (triggers == null) {
-            log.trace("No triggers found; profile is not active");
+            log.debug("No triggers found; profile is not active");
             
             return false;
         }
 
-        log.trace("Checking for active triggers");
+        log.debug("Checking for active triggers:");
 
         for (Iterator iter = triggers().iterator(); iter.hasNext();) {
             Trigger trigger = (Trigger) iter.next();
 
-            // If active, then stop now
-            if (trigger.isActive()) {
-                log.debug("Active trigger: {}", trigger);
-                return true;
+            // If not active, then stop now
+            if (!trigger.isActive()) {
+                log.debug("    {}", trigger);
+
+                return false;
+            }
+            else {
+                log.debug("    {} (ACTIVE)", trigger);
             }
         }
-
-        return false;
+        
+        // Else all triggers are active so we are active
+        return true;
     }
 }

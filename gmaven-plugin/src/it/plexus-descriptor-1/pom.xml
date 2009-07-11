@@ -36,8 +36,9 @@
     
     <dependencies>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all-minimal</artifactId>
+            <groupId>org.codehaus.groovy.maven.runtime</groupId>
+            <artifactId>gmaven-runtime-default</artifactId>
+            <version>testing</version>
         </dependency>
     </dependencies>
     

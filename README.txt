@@ -13,7 +13,19 @@ Integration Testing
 
 To invoke integration tests using the SHITTY plugin you need to:
 
-    mvn -Dit
+    mvn -Dshit
+
+
+IDE Configuration
+=================
+
+To generate IDEA configuration w/sources & javadocs:
+
+    mvn -Pidea
+
+Or the basic configuration:
+
+    mvn idea:idea
 
 
 Site Generation
@@ -25,37 +37,17 @@ You need to perform a full build first, before site generation will function cor
 
 To generate the full site locally for review:
 
-    mvn install site-deploy -DstageDistributionUrl=file:`pwd`/dist
+    mvn install site-deploy -Dstage.distributionUrl=file:`pwd`/dist
 
 NOTE: Looks like something is whacky somewhere, and you will *need* to
-      run the site goals with the install goal for the gmaven-examples
+      run the site goals with the install goal for the example-plugins
       site to generate correctly.
 
-Release Muck
-============
+And then open up the main index in a browser, as in:
 
-NOTE: This does not really work ATM, not sure why... but release:prepare barfs
-      while tagging, so have to finish up the rest of the details by hand.
-      Hopefully for the next release I'll get this sorted out... or write my
-      own damn plugin to deal with this crap.
+    open dist/site/index.html
 
-First sanity check:
+Uber build:
 
-    mvn -Drelease release:prepare -DdryRun | tee release-prepare-dry.log
-
-If all looks happy, first clean up:
-
-    mvn release:clean
-    rm *.log
-
-And then:
-
-    mvn -Drelease release:prepare | tee release-prepare.log
-    mvn -Drelease release:perform | tee release-perform.log
-
-NOTE: It appears that release:prepare needs -Dusername=xxx and -Dpassword=xxx to
-      work correctly... :-(
-
-The generated website is not deployed as part of the release process ATM, so
-keep the release tree around and run site build from there.
+    (find . -name target -type d | xargs rm -rf) && rm -rf dist && mvn -Dshit install site-deploy -Dstage.distributionUrl=file:`pwd`/dist && open dist/site/index.html
 

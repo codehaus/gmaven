@@ -49,15 +49,27 @@ public abstract class ComponentMojoSupport
         return provider().feature(key);
     }
 
+    //
+    // NOTE: Seems like we have to set the TCL here, setting in parent does not seem terribly happy :-(
+    //
+
     protected void doExecute() throws Exception {
-        Feature feature = feature();
+        final ClassLoader tcl = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(provider().getClass().getClassLoader());
 
-        Configuration context = new Configuration();
-        configure(context);
+        try {
+            Feature feature = feature();
 
-        Component component = feature.create(context);
+            Configuration context = new Configuration();
+            configure(context);
 
-        process(component);
+            Component component = feature.create(context);
+
+            process(component);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader(tcl);
+        }
     }
 
     protected void configure(final Configuration context) throws Exception {

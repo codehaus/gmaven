@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.codehaus.groovy.maven</groupId>
         <artifactId>gmaven</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.0-rc-2</version>
     </parent>
 
     <groupId>org.codehaus.groovy.maven.archetypes</groupId>
@@ -70,35 +70,6 @@
                                         <type>jar</type>
                                     </artifact>
                                 </artifacts>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                
-                <!--
-                Manually filter @project.version@, since the maven-resources-plugin will clobber
-                more ${} things than it should, so *ucking stupid.
-                -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <phase>generate-resources</phase>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
-                            <configuration>
-                                <tasks>
-                                    <copy todir="${project.build.outputDirectory}" filtering="true" includeEmptyDirs="false">
-                                        <fileset dir="${project.basedir}/src/main/filtered-resources">
-                                            <include name="**" />
-                                        </fileset>
-                                        <filterset>
-                                            <filter token="project.version" value="${project.version}" />
-                                        </filterset>
-                                    </copy>
-                                </tasks>
                             </configuration>
                         </execution>
                     </executions>

@@ -20,7 +20,7 @@ import org.codehaus.groovy.maven.gossip.Event;
 import org.codehaus.groovy.maven.gossip.Level;
 
 /**
- * A simple event renderer.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -33,16 +33,6 @@ public class SimpleRenderer
     private boolean shortName = false;
 
     private int nameWidth = -1;
-
-    public SimpleRenderer() {}
-    
-    public String toString() {
-        return "SimpleRenderer{" +
-                "includeName=" + includeName +
-                ", shortName=" + shortName +
-                ", nameWidth=" + nameWidth +
-                '}';
-    }
 
     public boolean getIncludeName() {
         return includeName;
@@ -75,7 +65,7 @@ public class SimpleRenderer
     public String render(final Event event) {
         assert event != null;
 
-        log.trace("Rendering: {}", event);
+        // log.debug("Rendering: {}", event);
         
         StringBuffer buff = new StringBuffer();
 

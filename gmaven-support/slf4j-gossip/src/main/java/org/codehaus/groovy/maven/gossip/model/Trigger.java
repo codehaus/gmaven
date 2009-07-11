@@ -17,7 +17,7 @@
 package org.codehaus.groovy.maven.gossip.model;
 
 /**
- * Trigger node.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

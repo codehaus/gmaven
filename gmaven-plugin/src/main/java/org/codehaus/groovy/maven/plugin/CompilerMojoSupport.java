@@ -16,17 +16,17 @@
 
 package org.codehaus.groovy.maven.plugin;
 
-import org.apache.maven.shared.io.scan.StaleResourceScanner;
-import org.apache.maven.shared.io.scan.mapping.SourceMapping;
-import org.apache.maven.shared.model.fileset.FileSet;
-import org.codehaus.groovy.maven.common.ArtifactItem;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.maven.shared.io.scan.StaleResourceScanner;
+import org.apache.maven.shared.io.scan.mapping.SourceMapping;
+import org.apache.maven.shared.model.fileset.FileSet;
+import org.codehaus.groovy.maven.common.ArtifactItem;
 
 /**
  * Support for compile mojos (class and stub gen).

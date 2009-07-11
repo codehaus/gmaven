@@ -21,7 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Representation of a method definition.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -36,9 +36,9 @@ public class MethodDef
     
     private TypeDef returns;
 
-    private final Set parameters = new LinkedHashSet();
+    private Set parameters = new LinkedHashSet();
 
-    private final Set throwz = new LinkedHashSet();
+    private Set throwz = new LinkedHashSet();
 
     public MethodDef() {
         this(Type.METHOD);
@@ -70,14 +70,8 @@ public class MethodDef
         return returns;
     }
 
-    public void setReturns(final TypeDef type) {
-        this.returns = type;
-    }
-
-    public void setReturns(final String type) {
-        assert type != null;
-
-        setReturns(new TypeDef(type));
+    public void setReturns(final TypeDef returns) {
+        this.returns = returns;
     }
 
     public void addParameter(final ParameterDef param) {
@@ -85,20 +79,6 @@ public class MethodDef
 
         param.setParent(this);
         parameters.add(param);
-    }
-
-    public void addParameter(final TypeDef type, final String name) {
-        assert type != null;
-        assert name != null;
-
-        addParameter(new ParameterDef(type, name));
-    }
-
-    public void addParameter(final String type, final String name) {
-        assert type != null;
-        assert name != null;
-
-        addParameter(new ParameterDef(type, name));
     }
 
     public Set getParameters() {
@@ -119,7 +99,6 @@ public class MethodDef
         throw new UnsupportedOperationException();
     }
 
-    /** @noinspection UnusedDeclaration*/
     public void setSuperParameters(final Set superParameters) {
         throw new UnsupportedOperationException();
     }

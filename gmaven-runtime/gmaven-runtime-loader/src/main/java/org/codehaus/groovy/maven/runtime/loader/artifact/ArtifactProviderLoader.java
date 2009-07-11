@@ -16,24 +16,22 @@
 
 package org.codehaus.groovy.maven.runtime.loader.artifact;
 
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DefaultArtifact;
-import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
-import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
-import org.codehaus.groovy.maven.feature.Provider;
-import org.codehaus.groovy.maven.feature.ProviderLoader;
-import org.codehaus.groovy.maven.runtime.loader.realm.RealmManager;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
+import org.codehaus.classworlds.ClassRealm;
+import org.codehaus.groovy.maven.feature.Provider;
+import org.codehaus.groovy.maven.feature.ProviderLoader;
+import org.codehaus.groovy.maven.runtime.loader.LoaderSupport;
+import org.codehaus.plexus.PlexusContainer;
 
 /**
  * Loads a provider based on a configured {@link ArtifactHandler}.
@@ -44,17 +42,9 @@ import java.util.Map;
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
 */
 public class ArtifactProviderLoader
+    extends LoaderSupport
     implements ProviderLoader
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
-    /**
-     * @plexus.requirement
-     * 
-     * @noinspection UnusedDeclaration
-     */
-    private RealmManager realmManager;
-
     private ArtifactHandler handler;
 
     public ArtifactProviderLoader() {}
@@ -75,48 +65,92 @@ public class ArtifactProviderLoader
             return null;
         }
 
-        Provider provider = loadProvider(key);
+        log.debug("Loading providers: {}", key);
 
-        Map providers = new HashMap();
+        Artifact query = handler.createQuery(key);
         
-        providers.put(provider.key(), provider);
-
-        return providers;
+        return load(query);
     }
 
-    private URL[] buildClassPath(final Artifact query) throws Exception {
+    private Map load(final Artifact query) throws Exception {
+        assert query != null;
+
+        PlexusContainer container = findContainer(query);
+
+        // Get a hold on our child's class loader, we need to inject it into the thread context for shit to work
+        ClassRealm childRealm = container.getContainerRealm();
+        ClassLoader classLoader = childRealm.getClassLoader();
+
+        Map discovered = null;
+
+        // Need to have our child's CL as the TCL or shit won't work as we want :-(
+        final ClassLoader tcl = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(classLoader);
+
+        // See if there are any providers
+        try {
+            discovered = container.lookupMap(Provider.class.getName());
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader(tcl);
+        }
+
+        // If we didn't find anything, then nuke the child container
+        if (discovered == null || discovered.isEmpty()) {
+            container.dispose();
+        }
+
+        return discovered;
+    }
+
+    private PlexusContainer findContainer(final Artifact query) throws Exception {
+        assert query != null;
+
+        String id = query.getDependencyConflictId();
+
+        PlexusContainer parent = getContainer();
+        
+        PlexusContainer container;
+
+        if (parent.hasChildContainer(id)) {
+            // Use the existing container
+            container = parent.getChildContainer(id);
+
+            log.trace("Re-using container: {}", container);
+        }
+        else {
+            // Create a new child container, build its class-path
+            List classPath = buildClassPath(query);
+
+            Map context = new HashMap();
+
+            container = parent.createChildContainer(id, classPath, context);
+
+            log.trace("Created new container: {}", container);
+        }
+
+        return container;
+    }
+
+    private List buildClassPath(final Artifact query) throws Exception {
         assert query != null;
 
         Artifact artifact = handler.createDependency(query);
         ArtifactResolutionResult result = handler.resolve(artifact, new ScopeArtifactFilter(DefaultArtifact.SCOPE_RUNTIME));
 
+        log.debug("Classpath: {}", artifact);
+
         List classPath = new ArrayList();
 
-        // Add runtime dependency classpath
         for (Iterator iter = result.getArtifacts().iterator(); iter.hasNext();) {
             Artifact element = (Artifact) iter.next();
 
             File file = element.getFile();
-            URL url = file.toURI().toURL();
+            log.debug("    {}", file);
 
-            classPath.add(url);
+            classPath.add(file);
         }
 
-        return (URL[]) classPath.toArray(new URL[classPath.size()]);
-    }
-
-    private Provider loadProvider(final String key) throws Exception {
-        assert key != null;
-
-        log.debug("Loading providers: {}", key);
-
-        Artifact query = handler.createQuery(key);
-        URL[] classPath = buildClassPath(query);
-        ClassLoader parent = getClass().getClassLoader();
-        ClassRealm realm = realmManager.createProviderRealm(key, classPath, parent);
-        
-        Class type = realm.loadClass("org.codehaus.groovy.maven.runtime.v" + key.replace('.', '_').replace('-', '_') + ".ProviderImpl");
-
-        return (Provider) type.newInstance();
+        return classPath;
     }
 }

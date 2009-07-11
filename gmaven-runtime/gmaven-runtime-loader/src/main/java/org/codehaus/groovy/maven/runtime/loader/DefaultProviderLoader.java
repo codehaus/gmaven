@@ -16,51 +16,27 @@
 
 package org.codehaus.groovy.maven.runtime.loader;
 
-import org.codehaus.groovy.maven.feature.Provider;
-import org.codehaus.groovy.maven.feature.ProviderLoader;
-import org.codehaus.plexus.PlexusConstants;
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.context.Context;
-import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.codehaus.groovy.maven.feature.Provider;
+import org.codehaus.groovy.maven.feature.ProviderLoader;
+
 /**
  * Default {@link ProviderLoader}.
  *
- * @plexus.component role="org.codehaus.groovy.maven.feature.ProviderLoader" role-hint="default"
+ * @plexus.component role="org.codehaus.groovy.maven.feature.ProviderLoader" role-hint="default" instantiation-strategy="singleton"
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class DefaultProviderLoader
-    implements ProviderLoader, Contextualizable
+    extends LoaderSupport
+    implements ProviderLoader
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
-    private PlexusContainer container;
-
-    public void contextualize(final Context context) throws ContextException {
-        assert context != null;
-
-        container = (PlexusContainer) context.get(PlexusConstants.PLEXUS_KEY);
-    }
-
-    protected PlexusContainer getContainer() {
-        if (container == null) {
-            throw new IllegalStateException("Container not bound");
-        }
-
-        return container;
-    }
-
     public Map load(final String key) throws Exception {
         assert key != null;
 
@@ -88,12 +64,8 @@ public class DefaultProviderLoader
      * Find any providers which are available in the container.
      */
     private Map findProviders() {
-        Map providers = getContainer().getComponentDescriptorMap(Provider.class.getName());
-        if (providers == null) {
-            throw new Error("No providers discovered");
-        }
-        
-        Set keys = providers.keySet();
+        Set keys = getContainer().getComponentDescriptorMap(Provider.class.getName()).keySet();
+
         Map found = null;
 
         for (Iterator iter = keys.iterator(); iter.hasNext();) {

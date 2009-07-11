@@ -18,6 +18,7 @@
 package org.codehaus.groovy.maven.runtime.support.stubgen.parser;
 
 import junit.framework.TestCase;
+import org.codehaus.groovy.maven.runtime.support.stubgen.parser.DynamicTokens;
 
 /**
  * Tests for the {@link org.codehaus.groovy.maven.runtime.support.stubgen.parser.DynamicTokens} class.

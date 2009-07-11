@@ -16,17 +16,17 @@
 
 package org.codehaus.groovy.maven.plugin.compile;
 
-import org.apache.maven.shared.io.scan.mapping.SourceMapping;
-import org.apache.maven.shared.io.scan.mapping.SuffixMapping;
-import org.apache.maven.shared.model.fileset.FileSet;
-import org.codehaus.groovy.maven.feature.Component;
-import org.codehaus.groovy.maven.feature.Configuration;
-import org.codehaus.groovy.maven.plugin.CompilerMojoSupport;
-import org.codehaus.groovy.maven.runtime.ClassCompiler;
-
 import java.io.File;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.apache.maven.shared.io.scan.mapping.SourceMapping;
+import org.apache.maven.shared.io.scan.mapping.SuffixMapping;
+import org.apache.maven.shared.model.fileset.FileSet;
+import org.codehaus.groovy.maven.plugin.CompilerMojoSupport;
+import org.codehaus.groovy.maven.feature.Component;
+import org.codehaus.groovy.maven.feature.Configuration;
+import org.codehaus.groovy.maven.runtime.ClassCompiler;
 
 /**
  * Support for compile mojos that generate classes.
@@ -92,8 +92,6 @@ public abstract class AbstractCompileMojo
      * Allow setting the bytecode compatibility.
      *
      * @parameter expression="${targetBytecode}"
-     *
-     * @noinspection UnusedDeclaration
      */
     private String targetBytecode;
     
@@ -101,8 +99,6 @@ public abstract class AbstractCompileMojo
      * Sets the warning level.
      *
      * @paramater expression="${waningLevel}" default-value="0"
-     *
-     * @noinspection UnusedDeclaration
      */
     private int warningLevel;
     

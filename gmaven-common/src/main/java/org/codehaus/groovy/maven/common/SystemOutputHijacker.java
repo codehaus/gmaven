@@ -16,9 +16,9 @@
 
 package org.codehaus.groovy.maven.common;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
+import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 
 /**
  * Hijacks the systems standard output and error streams on a per-thread basis

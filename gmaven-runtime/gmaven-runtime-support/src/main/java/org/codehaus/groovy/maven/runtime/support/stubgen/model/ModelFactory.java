@@ -16,12 +16,10 @@
 
 package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 
-import org.codehaus.groovy.maven.runtime.support.stubgen.parser.SourceType;
-
 import java.net.URL;
 
 /**
- * Provides factory access to create a {@link SourceDef} from a URL.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -29,10 +27,4 @@ import java.net.URL;
 public interface ModelFactory
 {
     SourceDef create(final URL input) throws Exception;
-
-    SourceDef create(final URL input, final SourceType type) throws Exception;
-
-    //
-    // TODO: Consider adding inputstream and/or reader impl with sourcetype
-    //
 }

@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.codehaus.groovy.maven</groupId>
         <artifactId>gmaven</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.0-rc-2</version>
     </parent>
     
     <artifactId>gmaven-legacy</artifactId>
@@ -36,6 +36,7 @@
     </description>
     
     <modules>
+        <module>groovy-plexus-factory</module>
         <module>groovy-maven-plugin</module>
     </modules>
 

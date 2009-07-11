@@ -16,21 +16,14 @@
 
 package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 
-import org.codehaus.groovy.maven.runtime.support.stubgen.parser.Node;
 import org.codehaus.groovy.maven.runtime.support.stubgen.parser.SourceType;
-import org.codehaus.plexus.util.FileUtils;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 /**
- * Representation of a source file definition.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -42,13 +35,13 @@ public class SourceDef
 
     private SourceType type;
 
+    // TODO: Add source-level comment for legal header muck
+    
     private PackageDef pkg;
 
-    private final Set imports = new LinkedHashSet();
+    private Set imports = new LinkedHashSet();
 
-    private final Set classes = new LinkedHashSet();
-
-    private final List statements = new LinkedList();
+    private Set classes = new LinkedHashSet();
 
     public URL getUrl() {
         return url;
@@ -93,30 +86,5 @@ public class SourceDef
 
     public Set getClasses() {
         return classes;
-    }
-
-    public void addStatement(final Node node) {
-        assert node != null;
-
-        statements.add(node);
-    }
-
-    public List getStatements() {
-        return statements;
-    }
-
-    public boolean hasStatements() {
-        return !statements.isEmpty();
-    }
-
-    public String getScriptName() {
-        try {
-            // TODO: Use URL.toURI() once Java 5 is the base platform
-            File file = new File(new URI(url.toString()).getPath());
-            return FileUtils.basename(file.getName(), "." + FileUtils.extension(file.getName()));
-        }
-        catch (URISyntaxException e) {
-            throw new RuntimeException("Unable to determine script class name from: " + url, e);
-        }
     }
 }

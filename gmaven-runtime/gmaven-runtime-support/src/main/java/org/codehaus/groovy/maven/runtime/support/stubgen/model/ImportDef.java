@@ -17,7 +17,7 @@
 package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 
 /**
- * Representation of an import definition.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -35,13 +35,6 @@ public class ImportDef
 
     private String alias;
 
-    public ImportDef() {}
-
-    public ImportDef(final String packageName, final String type) {
-        setPackage(packageName);
-        setType(type);
-    }
-    
     public boolean isStatic() {
         return isStatic;
     }

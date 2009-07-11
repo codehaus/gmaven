@@ -16,15 +16,14 @@
 
 package org.codehaus.groovy.maven.gossip.model.source;
 
+import java.net.URL;
+
 import org.codehaus.groovy.maven.gossip.config.ConfigurationException;
-import org.codehaus.groovy.maven.gossip.config.MissingPropertyException;
 import org.codehaus.groovy.maven.gossip.model.Configuration;
 import org.codehaus.groovy.maven.gossip.model.Source;
 
-import java.net.URL;
-
 /**
- * Resource-based configuration source.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -32,15 +31,7 @@ import java.net.URL;
 public class ResourceSource
     extends Source
 {
-    private static final String CL_TYPE_TCL = "TCL";
-
-    private static final String CL_TYPE_INTERNAL = "INTERNAL";
-
-    private static final String CL_TYPE_SYSTEM = "SYSTEM";
-
     private String name;
-
-    private String classLoaderType = CL_TYPE_TCL;
 
     private ClassLoader classLoader;
 
@@ -58,34 +49,7 @@ public class ResourceSource
         this.name = name;
     }
 
-    public String getClassLoaderType() {
-        return classLoaderType;
-    }
-
-    public void setClassLoaderType(final String type) {
-        assert type != null;
-        
-        this.classLoaderType = type;
-    }
-    
     public ClassLoader getClassLoader() {
-        if (classLoader == null) {
-            String type = classLoaderType.toUpperCase();
-
-            if (type.equals(CL_TYPE_TCL)) {
-                classLoader = Thread.currentThread().getContextClassLoader();
-            }
-            else if (type.equals(CL_TYPE_INTERNAL)) {
-                classLoader = getClass().getClassLoader();
-            }
-            else if (type.equals(CL_TYPE_SYSTEM)) {
-                classLoader = ClassLoader.getSystemClassLoader();
-            }
-            else {
-                throw new ConfigurationException("Invalid classLoaderType: " + classLoaderType);
-            }
-        }
-
         return classLoader;
     }
 
@@ -95,35 +59,26 @@ public class ResourceSource
 
     public Configuration load() throws Exception {
         if (name == null) {
-            throw new MissingPropertyException("name");
+            throw new ConfigurationException("Missing property: name");
         }
 
         Configuration config = null;
 
         ClassLoader cl = getClassLoader();
-        assert cl != null;
-        
-        log.trace("Loading resource for name: {}, CL: {}", name, cl);
+
+        if (cl == null) {
+            cl = Thread.currentThread().getContextClassLoader();
+        }
         
         URL url = cl.getResource(name);
 
-        log.trace("Loaded resource: {}", url);
-        
         if (url == null) {
-            log.trace("Unable to load; missing resource: {}", name);
+            log.debug("Unable to load; missing resource: {}", name);
         }
         else {
             config = load(url);
         }
 
         return config;
-    }
-
-    public String toString() {
-        return "ResourceSource{" +
-                "name='" + name + '\'' +
-                ", classLoaderType='" + classLoaderType + '\'' +
-                ", classLoader=" + classLoader +
-                '}';
     }
 }

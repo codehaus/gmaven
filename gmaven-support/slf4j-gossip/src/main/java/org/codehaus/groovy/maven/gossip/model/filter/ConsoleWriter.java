@@ -16,16 +16,16 @@
 
 package org.codehaus.groovy.maven.gossip.model.filter;
 
+import java.io.PrintStream;
+
 import org.codehaus.groovy.maven.gossip.Event;
 import org.codehaus.groovy.maven.gossip.config.ConfigurationException;
 import org.codehaus.groovy.maven.gossip.model.Filter;
 import org.codehaus.groovy.maven.gossip.model.render.Renderer;
 import org.codehaus.groovy.maven.gossip.model.render.SimpleRenderer;
 
-import java.io.PrintStream;
-
 /**
- * Writes events to console.
+ * ???
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -45,7 +45,7 @@ public class ConsoleWriter
 
     public static final String SYSTEM_ERR = "SYSTEM.ERR";
 
-    private String name = SYSTEM_OUT;
+    private String name;
     
     private transient PrintStream stream;
 
@@ -53,12 +53,6 @@ public class ConsoleWriter
 
     public ConsoleWriter(final String name) {
         setName(name);
-    }
-
-    public String toString() {
-        return "ConsoleWriter{" +
-                "name='" + name + '\'' +
-                '}';
     }
 
     public String getName() {
@@ -73,6 +67,10 @@ public class ConsoleWriter
 
     private PrintStream getStream() {
         if (stream == null) {
+            if (name == null) {
+                name = SYSOUT;
+            }
+
             // Parse the stream
             String tmp = name.toUpperCase();
             if (OUT.equals(tmp) || SYSOUT.equals(tmp) || SYSTEM_OUT.equals(tmp)) {
@@ -105,6 +103,7 @@ public class ConsoleWriter
         String text = renderer.render(event);
 
         PrintStream out = getStream();
+
         synchronized (out) {
             out.print(text);
             out.flush();

@@ -16,19 +16,19 @@
 
 package org.codehaus.groovy.maven.plugin.execute;
 
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
-import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
+import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides property resolution access to Groovy executions.
@@ -37,7 +37,7 @@ import java.util.Properties;
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class GroovyMavenProjectAdapter
-    extends MavenProjectDelegateAdapter
+    extends MavenProject
 {
     private final MavenSession session;
 
@@ -50,6 +50,9 @@ public class GroovyMavenProjectAdapter
     public GroovyMavenProjectAdapter(final MavenProject project, final MavenSession session, final Map properties, final Map defaults) {
         super(project);
 
+        // Copy constructor disowns its parent, so re-establish again here
+        setParent(project.getParent());
+        
         this.session = session;
         this.properties = properties;
         this.defaults = defaults;
@@ -83,7 +86,7 @@ public class GroovyMavenProjectAdapter
                 putAll(properties);
             }
 
-            if (log.isDebugEnabled() && props != null && !props.isEmpty()) {
+            if (log.isDebugEnabled() && !props.isEmpty()) {
                 log.debug("Properties: ");
 
                 List keys = new ArrayList();
@@ -137,8 +140,6 @@ public class GroovyMavenProjectAdapter
                 }
             }
 
-            log.trace("Getting value: {} = {}", key, value);
-
             return value;
         }
 
@@ -150,19 +151,7 @@ public class GroovyMavenProjectAdapter
             // We have to override getProperty() as the default impl gets the value from super.get() instead of get()
             Object value = get(name);
 
-            log.trace("Getting property: {} = {}", name, value);
-
             return value != null ? String.valueOf(value) : null;
-        }
-
-        public Object put(final Object key, final Object value) {
-            log.trace("Putting value: {} = {}", key, value);
-
-            // Have to set in the original to preserve between executions
-            getDelegate().getProperties().put(key, value);
-
-            // But need to update ourself so resolution in the same execution works too
-            return super.put(key, value);
         }
     }
 }
