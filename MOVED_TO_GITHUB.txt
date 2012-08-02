@@ -1,0 +1,3 @@
+Source repository has moved to Github:
+
+https://github.com/groovy/gmaven
